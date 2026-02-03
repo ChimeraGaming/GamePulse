@@ -1,6 +1,6 @@
 # GamePulse
 
-![Release](https://img.shields.io/github/v/release/ChimeraGaming/GamePulse?include_prereleases) 
+![Release](https://img.shields.io/github/v/release/ChimeraGaming/GamePulse?include_prereleases)  
 ![Build](https://img.shields.io/badge/build-Android_Studio-blue)
 ![License](https://img.shields.io/github/license/ChimeraGaming/GamePulse)
 ![Issues](https://img.shields.io/github/issues/ChimeraGaming/GamePulse)
