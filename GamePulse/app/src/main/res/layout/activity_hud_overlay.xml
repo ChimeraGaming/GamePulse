@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/github_dark_card"
+    android:padding="16dp">
+
+    <!-- Header with RAM and control buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/ramHeaderText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RAM: 0.00/0 GB"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/github_dark_text" />
+
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Settings"
+            android:src="@android:drawable/ic_menu_manage"
+            android:tint="@color/github_dark_text"
+            android:layout_marginEnd="8dp" />
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Close"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="@color/github_dark_text" />
+    </LinearLayout>
+
+    <!-- RAM Indicators Container -->
+    <LinearLayout
+        android:id="@+id/ramIndicatorsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp">
+        <!-- RAM indicators will be added programmatically -->
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/github_dark_border"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Battery Section Container -->
+    <LinearLayout
+        android:id="@+id/batteryContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Battery Stats Panel (default) -->
+        <LinearLayout
+            android:id="@+id/batteryStatsPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/batteryInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Battery - 0 mAh | Health: Unknown"
+                android:textSize="14sp"
+                android:textColor="@color/github_dark_text" />
+
+            <TextView
+                android:id="@+id/batteryStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: Unknown | Voltage: 0.0V"
+                android:textSize="14sp"
+                android:textColor="@color/github_dark_text"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/batteryEstimatedLifeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estimated Life: 0h 00m"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/github_dark_accent"
+                android:layout_marginTop="12dp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Battery Power Cell (alternative) -->
+        <FrameLayout
+            android:id="@+id/batteryPowerCell"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:visibility="gone">
+            <!-- Custom battery visual will be added programmatically -->
+        </FrameLayout>
+
+        <!-- Battery Gauge (alternative) -->
+        <FrameLayout
+            android:id="@+id/batteryGauge"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:visibility="gone">
+            <!-- Circular progress will be added programmatically -->
+        </FrameLayout>
+
+        <!-- Battery Minimal (alternative) -->
+        <TextView
+            android:id="@+id/batteryMinimal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5h 30m"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:textColor="@color/github_dark_accent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

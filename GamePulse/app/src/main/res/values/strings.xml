@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GamePulse</string>
+    <string name="app_subtitle">Battery &amp; Performance Monitor</string>
+
+    <!-- Update Interval -->
+    <string name="update_interval">Update Interval:</string>
+
+    <!-- Battery Monitoring -->
+    <string name="battery_monitoring">Battery Monitoring</string>
+    <string name="voltage">Voltage:</string>
+    <string name="battery_level">Battery Level:</string>
+    <string name="status">Status:</string>
+    <string name="health">Health:</string>
+    <string name="temperature">Temperature:</string>
+    <string name="estimated_life">Estimated Life:</string>
+
+    <!-- RAM Monitoring -->
+    <string name="ram_monitoring">RAM Monitoring</string>
+    <string name="ram_usage">RAM Usage:</string>
+    <string name="ram_total">Total RAM:</string>
+
+    <!-- Battery Analysis -->
+    <string name="battery_analysis">Battery Analysis</string>
+    <string name="start_battery_test">Start Battery Test</string>
+    <string name="start_1hour_analysis">Start Battery Test</string>
+    <string name="stop_analysis">Stop Analysis</string>
+    <string name="enable_hud">Enable HUD</string>
+
+    <!-- v0.3 NEW: Overlay/HUD Controls -->
+    <string name="enable_overlay">Enable Overlay</string>
+    <string name="disable_overlay">Disable Overlay</string>
+    <string name="disable_hud">Disable HUD</string>
+
+    <!-- v0.3 NEW: HUD Settings -->
+    <string name="hud_settings_title">HUD Settings</string>
+    <string name="refresh_rate">Refresh Rate:</string>
+    <string name="ram_theme">RAM Theme:</string>
+    <string name="battery_theme">Battery Theme:</string>
+    <string name="overlay_position">Overlay Position:</string>
+    <string name="save">Save</string>
+
+    <!-- v0.3 NEW: App Themes -->
+    <string name="app_themes">App Themes</string>
+    <string name="theme_selection">Theme:</string>
+    <string name="current_theme">Current Theme:</string>
+    <string name="theme_applied">Theme applied! Restart app to see full changes.</string>
+
+    <!-- Theme Names -->
+    <string name="theme_dark">Dark (Default)</string>
+    <string name="theme_amoled">AMOLED Black</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_gaming_neon">Gaming Neon</string>
+    <string name="theme_cyberpunk">Cyberpunk</string>
+    <string name="theme_retro">Retro Console</string>
+
+    <!-- v0.3 NEW: Game Collection -->
+    <string name="game_collection">Game Collection</string>
+    <string name="game_collection_title">Game Collection</string>
+    <string name="game_collection_settings">Collection Settings</string>
+    <string name="filter_games">Filter Games</string>
+    <string name="sort_by">Sort By:</string>
+    <string name="all_games">All Games</string>
+    <string name="filter_by_system">Filter by System</string>
+    <string name="sort_battery_best">Battery (Best First)</string>
+    <string name="sort_battery_worst">Battery (Worst First)</string>
+    <string name="sort_ram_lowest">RAM (Lowest First)</string>
+    <string name="sort_ram_highest">RAM (Highest First)</string>
+    <string name="sort_alphabetical">Alphabetical</string>
+    <string name="no_games_found">No games found</string>
+    <string name="test_page">Test Page - Game Collection Coming Soon</string>
+
+    <!-- Analysis Results -->
+    <string name="analysis_results">Analysis Results</string>
+    <string name="duration">Duration:</string>
+    <string name="battery_drain">Battery Drain:</string>
+    <string name="voltage_drop">Voltage Drop:</string>
+    <string name="est_remaining_life">Est. Remaining Life:</string>
+    <string name="drain_rate">Drain Rate:</string>
+    <string name="top_energy_apps">Top Energy-Consuming Apps</string>
+    <string name="game">Game:</string>
+    <string name="system">System:</string>
+
+    <!-- Common -->
+    <string name="na">N/A</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="close">Close</string>
+
+    <!-- v0.3 NEW: Permissions -->
+    <string name="notification_permission_required">Notification permission is required for background monitoring</string>
+    <string name="overlay_permission_required">Overlay permission is required to display HUD</string>
+    <string name="usage_stats_permission_required">Usage stats permission is required for battery analysis</string>
+
+    <!-- v0.3 NEW: Notifications -->
+    <string name="battery_monitor_channel">Battery Monitoring</string>
+    <string name="battery_monitor_notification">Monitoring battery status</string>
+    <string name="overlay_channel">Overlay Service</string>
+    <string name="overlay_notification">HUD Overlay is active</string>
+
+    <!-- Telemetry Consent Dialog -->
+    <string name="telemetry_icon">Telemetry Icon</string>
+    <string name="telemetry_title">Gaming Telemetry</string>
+    <string name="telemetry_explanation">HUDTracker uses local telemetry to predict battery usage for your games. All data is stored locally on your device and used only to improve your gaming experience.</string>
+
+    <string name="telemetry_benefits_title">✓ Benefits</string>
+    <string name="telemetry_benefits">• Accurate battery predictions per game\n• Session time recommendations\n• Performance analytics and insights\n• Game-specific optimization tips</string>
+
+    <string name="telemetry_collected_title">📊 What We Collect</string>
+    <string name="telemetry_collected">• Game names and package names\n• Battery usage during sessions\n• Session start/end times\n• RAM usage during gameplay\n• Device temperature and screen brightness</string>
+
+    <string name="telemetry_never_collected_title">🔒 NEVER Collected</string>
+    <string name="telemetry_never_collected">• Personal information\n• Location data\n• Account credentials\n• Game save data\n• Screenshots or gameplay</string>
+
+    <string name="telemetry_accept">Accept</string>
+    <string name="telemetry_decline">Decline</string>
+
+    <!-- Privacy Settings Activity -->
+    <string name="privacy_settings_title">Privacy Settings</string>
+
+    <string name="local_telemetry">Local Telemetry</string>
+    <string name="local_telemetry_description">Enable battery prediction and analytics. All data stored locally.</string>
+
+    <string name="community_sharing">Community Sharing</string>
+    <string name="community_sharing_description">Share anonymous data to improve predictions for all users.</string>
+    <string name="sharing_requires_telemetry">Requires telemetry to be enabled</string>
+    <string name="enable_telemetry_first">Please enable telemetry first</string>
+
+    <string name="data_transparency">Data Transparency</string>
+    <string name="data_transparency_description">We collect: game names, battery drain rates, session times, RAM usage, screen brightness, and device temperature.\n\nWe NEVER collect: personal information, location, account credentials, or game content.</string>
+
+    <string name="data_dashboard">Data Dashboard</string>
+    <string name="total_sessions">Total Sessions:</string>
+    <string name="total_games">Total Games:</string>
+    <string name="data_size_estimate">Data Size:</string>
+
+    <string name="data_management">Data Management</string>
+    <string name="export_data">Export My Data</string>
+    <string name="delete_all_data">Delete All Data</string>
+
+    <string name="disabled_features">Features Disabled</string>
+    <string name="telemetry_disabled_features">With telemetry disabled, the following features are unavailable:\n• Battery predictions per game\n• Session recommendations\n• Performance analytics\n• Game-specific insights</string>
+
+    <string name="privacy_policy_summary_title">Privacy Policy</string>
+    <string name="privacy_policy_summary">Your privacy is important to us. All telemetry data is stored locally on your device. If you enable community sharing, only anonymous, aggregated statistics are shared. We never collect personal information, location data, or account credentials.</string>
+
+    <string name="delete_all_data_title">Delete All Data?</string>
+    <string name="delete_all_data_message">This will permanently delete all telemetry data including game sessions and predictions. This action cannot be undone.</string>
+    <string name="data_deleted_successfully">All data deleted successfully</string>
+    <string name="delete_failed">Failed to delete data: %s</string>
+
+    <string name="no_data_to_export">No data to export</string>
+    <string name="data_exported_to">Data exported to:\n%s</string>
+    <string name="export_failed">Failed to export data: %s</string>
+    <string name="share_telemetry_data">Share Telemetry Data</string>
+</resources>

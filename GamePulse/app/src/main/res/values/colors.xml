@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- GitHub Dark Theme Colors -->
+    <color name="github_dark_background">#0d1117</color>
+    <color name="github_dark_card">#161b22</color>
+    <color name="github_dark_accent">#58a6ff</color>
+    <color name="github_dark_text">#c9d1d9</color>
+    <color name="github_dark_border">#30363d</color>
+    <color name="github_dark_green">#3fb950</color>
+    <color name="github_dark_yellow">#f9c513</color>
+    <color name="github_dark_red">#f85149</color>
+    <color name="github_dark_primary">#58A6FF</color>
+    <color name="github_dark_onPrimary">#FFFFFF</color>
+    <color name="github_dark_primaryContainer">#1F6FEB</color>
+    <color name="github_dark_secondary">#79C0FF</color>
+    <color name="github_dark_onSecondary">#0D1117</color>
+    
+    <!-- Material Design 3 Color Scheme -->
+    
+    <!-- Light Theme Colors -->
+    <color name="md_theme_light_primary">#006C4C</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#89F8C7</color>
+    <color name="md_theme_light_onPrimaryContainer">#002114</color>
+    <color name="md_theme_light_secondary">#4D6357</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#CFE9D9</color>
+    <color name="md_theme_light_onSecondaryContainer">#0A1F16</color>
+    <color name="md_theme_light_tertiary">#3D6373</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#C1E8FB</color>
+    <color name="md_theme_light_onTertiaryContainer">#001F29</color>
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+    <color name="md_theme_light_background">#FBFDF8</color>
+    <color name="md_theme_light_onBackground">#191C1A</color>
+    <color name="md_theme_light_surface">#FBFDF8</color>
+    <color name="md_theme_light_onSurface">#191C1A</color>
+    
+    <!-- Dark Theme Colors - Using GitHub Dark Theme -->
+    <color name="md_theme_dark_primary">#58a6ff</color>
+    <color name="md_theme_dark_onPrimary">#0d1117</color>
+    <color name="md_theme_dark_primaryContainer">#1f6feb</color>
+    <color name="md_theme_dark_onPrimaryContainer">#c9d1d9</color>
+    <color name="md_theme_dark_secondary">#3fb950</color>
+    <color name="md_theme_dark_onSecondary">#0d1117</color>
+    <color name="md_theme_dark_secondaryContainer">#238636</color>
+    <color name="md_theme_dark_onSecondaryContainer">#c9d1d9</color>
+    <color name="md_theme_dark_tertiary">#79c0ff</color>
+    <color name="md_theme_dark_onTertiary">#0d1117</color>
+    <color name="md_theme_dark_tertiaryContainer">#1f6feb</color>
+    <color name="md_theme_dark_onTertiaryContainer">#c9d1d9</color>
+    <color name="md_theme_dark_error">#f85149</color>
+    <color name="md_theme_dark_onError">#0d1117</color>
+    <color name="md_theme_dark_errorContainer">#da3633</color>
+    <color name="md_theme_dark_onErrorContainer">#c9d1d9</color>
+    <color name="md_theme_dark_background">#0d1117</color>
+    <color name="md_theme_dark_onBackground">#c9d1d9</color>
+    <color name="md_theme_dark_surface">#161b22</color>
+    <color name="md_theme_dark_onSurface">#c9d1d9</color>
+    
+    <!-- Launcher Icon Colors -->
+    <color name="ic_launcher_background">#0d1117</color>
+</resources>

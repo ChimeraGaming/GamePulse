@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/github_dark_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Battery Test Results"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/github_dark_text"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Game Info Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/github_dark_card"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Game Information"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/github_dark_text"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Game:"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/gameNameText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/github_dark_text"
+                        android:layout_marginStart="8dp"
+                        tools:text="The Legend of Zelda: BOTW" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/systemInfoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="System:"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/systemNameText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/github_dark_accent"
+                        android:layout_marginStart="8dp"
+                        tools:text="Nintendo Switch" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Duration:"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/durationText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/github_dark_green"
+                        android:layout_marginStart="8dp"
+                        tools:text="45 Minutes" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Battery Usage Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/github_dark_card"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Battery Usage Breakdown"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/github_dark_text"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Battery Drain -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Battery Drain:"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/batteryDrainText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/github_dark_yellow"
+                        android:layout_marginStart="8dp"
+                        tools:text="5.2%" />
+                </LinearLayout>
+
+                <!-- Battery Levels -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start Level:"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/startBatteryText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:layout_marginStart="8dp"
+                        tools:text="95%" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="End Level:"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/endBatteryText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:layout_marginStart="8dp"
+                        tools:text="89.8%" />
+                </LinearLayout>
+
+                <!-- Voltage Drop -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Voltage Drop:"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/voltageDropText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textColor="@color/github_dark_text"
+                        android:layout_marginStart="8dp"
+                        tools:text="0.15V" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Full Playtime Estimate - Large & Prominent -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/github_dark_primaryContainer"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:strokeColor="@color/github_dark_accent"
+            app:strokeWidth="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Full Playtime Estimate"
+                    android:textSize="16sp"
+                    android:textColor="@color/github_dark_text"
+                    android:alpha="0.9"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/playtimeEstimateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/github_dark_accent"
+                    tools:text="20 HOURS" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="at 100% battery"
+                    android:textSize="14sp"
+                    android:textColor="@color/github_dark_text"
+                    android:alpha="0.7"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Top Apps Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/topAppsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/github_dark_card"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Top Battery Consumers"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/github_dark_text"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Container for app items -->
+                <LinearLayout
+                    android:id="@+id/topAppsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Button Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shareButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Share Screenshot"
+                android:textColor="@color/github_dark_onPrimary"
+                app:icon="@android:drawable/ic_menu_share"
+                app:iconTint="@color/github_dark_onPrimary"
+                app:backgroundTint="@color/github_dark_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/doneButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Done"
+                android:textColor="@color/github_dark_onSecondary"
+                app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                app:iconTint="@color/github_dark_onSecondary"
+                app:backgroundTint="@color/github_dark_secondary" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

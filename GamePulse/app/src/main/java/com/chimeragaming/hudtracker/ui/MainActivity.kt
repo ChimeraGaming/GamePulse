@@ -1,0 +1,420 @@
+package com.chimeragaming.gamepulse.ui
+
+import android.Manifest
+import android.app.AppOpsManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.chimeragaming.gamepulse.R
+import com.chimeragaming.gamepulse.databinding.ActivityMainBinding
+import com.chimeragaming.gamepulse.service.OverlayService
+import com.chimeragaming.gamepulse.utils.ThemeManager
+import com.chimeragaming.gamepulse.viewmodel.MainViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
+    private lateinit var appUsageAdapter: AppUsageAdapter
+
+    // All sections start collapsed (matching XML visibility="gone")
+    private var batteryMonitoringExpanded = false
+    private var ramMonitoringExpanded = false
+    private var batteryTestExpanded = false
+    private var themesExpanded = false
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (!granted) {
+            showPermissionExplanation("Notification permission is required for background monitoring")
+        }
+    }
+
+    private val overlayPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (Settings.canDrawOverlays(this)) {
+            startOverlayService()
+        } else {
+            showPermissionExplanation("Overlay permission is required to display HUD")
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
+        setupUI()
+        setupObservers()
+        requestPermissions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateOverlayButtonText()
+    }
+
+    private fun setupUI() {
+        // Update interval spinner - UPDATED WITH 4 OPTIONS
+        val intervals = arrayOf("1 second", "10 seconds", "30 seconds", "60 seconds")
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, intervals)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.updateIntervalSpinner.adapter = spinnerAdapter
+
+        // Set default to "10 seconds" (index 1)
+        binding.updateIntervalSpinner.setSelection(1)
+
+        binding.updateIntervalSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val intervalSeconds = when (position) {
+                    0 -> 1   // 1 second
+                    1 -> 10  // 10 seconds
+                    2 -> 30  // 30 seconds
+                    3 -> 60  // 60 seconds
+                    else -> 10
+                }
+                viewModel.setUpdateInterval(intervalSeconds)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        // RecyclerView setup
+        appUsageAdapter = AppUsageAdapter()
+        binding.appUsageRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = appUsageAdapter
+        }
+
+        // Button listeners
+        binding.enableHudButton!!.setOnClickListener {
+            startActivity(Intent(this, HudOverlayActivity::class.java))
+        }
+
+        binding.enableOverlayButton!!.setOnClickListener {
+            if (isOverlayRunning()) {
+                stopOverlayService()
+            } else {
+                if (Settings.canDrawOverlays(this)) {
+                    startOverlayService()
+                } else {
+                    requestOverlayPermission()
+                }
+            }
+        }
+
+        // Game Collection button (with null check)
+        binding.gameCollectionButton?.setOnClickListener {
+            startActivity(Intent(this, GameCollectionActivity::class.java))
+        }
+
+        // Collapsible sections - FIXED LOGIC
+        binding.batteryMonitoringHeader!!.setOnClickListener {
+            toggleSection(
+                binding.batteryMonitoringHeader!!,
+                binding.batteryMonitoringContent!!,
+                "Battery Monitoring",
+                batteryMonitoringExpanded
+            ) { batteryMonitoringExpanded = it }
+        }
+
+        binding.ramMonitoringHeader!!.setOnClickListener {
+            toggleSection(
+                binding.ramMonitoringHeader!!,
+                binding.ramMonitoringContent!!,
+                "RAM Monitoring",
+                ramMonitoringExpanded
+            ) { ramMonitoringExpanded = it }
+        }
+
+        binding.batteryTestHeader!!.setOnClickListener {
+            toggleSection(
+                binding.batteryTestHeader!!,
+                binding.batteryTestContent!!,
+                "Battery Test",
+                batteryTestExpanded
+            ) { batteryTestExpanded = it }
+        }
+
+        // Themes section (with null check)
+        binding.themesHeader?.setOnClickListener {
+            binding.themesContent?.let { content ->
+                toggleSection(
+                    binding.themesHeader!!,
+                    content,
+                    "App Themes",
+                    themesExpanded
+                ) { themesExpanded = it }
+            }
+        }
+
+        binding.startAnalysisButton.setOnClickListener {
+            if (checkUsageStatsPermission()) {
+                showBatteryTestSetup()
+            } else {
+                requestUsageStatsPermission()
+            }
+        }
+
+        binding.stopAnalysisButton.setOnClickListener {
+            viewModel.stopBatteryAnalysis()
+        }
+
+        updateOverlayButtonText()
+        setupThemeSpinner()
+    }
+
+    private fun updateOverlayButtonText() {
+        binding.enableOverlayButton!!.text = if (isOverlayRunning()) {
+            getString(R.string.disable_overlay)
+        } else {
+            getString(R.string.enable_overlay)
+        }
+    }
+
+    private fun isOverlayRunning(): Boolean {
+        return try {
+            // Check if overlay service is running
+            val manager = getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            manager.getRunningServices(Integer.MAX_VALUE).any {
+                it.service.className == OverlayService::class.java.name
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun stopOverlayService() {
+        try {
+            val intent = Intent(this, OverlayService::class.java)
+            stopService(intent)
+            updateOverlayButtonText()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun setupThemeSpinner() {
+        try {
+            // Check if views exist
+            val spinner = binding.themeSpinner ?: return
+            val currentText = binding.currentThemeText ?: return
+
+            val themes = ThemeManager.getAvailableThemes()
+            val themeLabels = ThemeManager.getThemeLabels()
+
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, themeLabels)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
+
+            val currentTheme = ThemeManager.getCurrentTheme(this)
+            val currentIndex = themes.indexOf(currentTheme)
+            if (currentIndex >= 0) {
+                spinner.setSelection(currentIndex)
+            }
+
+            currentText.text = ThemeManager.getThemeDisplayName(currentTheme)
+
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val selectedTheme = themes[position]
+                    val savedTheme = ThemeManager.getCurrentTheme(this@MainActivity)
+                    if (selectedTheme != savedTheme) {
+                        ThemeManager.setTheme(this@MainActivity, selectedTheme)
+                        currentText.text = ThemeManager.getThemeDisplayName(selectedTheme)
+
+                        Snackbar.make(binding.root, getString(R.string.theme_applied), Snackbar.LENGTH_LONG)
+                            .setAction("Restart") { recreate() }
+                            .show()
+                    }
+                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            viewModel.batteryInfo.collect { batteryInfo ->
+                batteryInfo?.let {
+                    binding.batteryVoltageText.text = String.format("%.2f V", it.voltage)
+                    binding.batteryLevelText.text = String.format("%.1f%%", it.percentage)
+                    binding.batteryStatusText.text = it.status
+                    binding.batteryHealthText.text = it.health
+                    binding.batteryTemperatureText.text = String.format("%.1f°C", it.temperature)
+                    binding.estimatedLifeText.text = it.getEstimatedLifeFormatted()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.ramInfo.collect { ramInfo ->
+                ramInfo?.let {
+                    binding.ramUsageText.text = it.getUsedMemoryFormatted()
+                    binding.ramTotalText.text = it.getTotalMemoryFormatted()
+                    binding.ramProgressBar.progress = it.usagePercentage.toInt()
+                    binding.ramPercentageText.text = String.format("%.1f%%", it.usagePercentage)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isAnalysisRunning.collect { isRunning ->
+                binding.startAnalysisButton.isEnabled = !isRunning
+                binding.stopAnalysisButton.isEnabled = isRunning
+                binding.analysisProgressBar.visibility = if (isRunning) View.VISIBLE else View.GONE
+                binding.analysisStatusText.visibility = if (isRunning) View.VISIBLE else View.GONE
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.analysisProgress.collect { progress ->
+                binding.analysisProgressBar.progress = progress
+                binding.analysisStatusText.text = "Analysis: $progress% complete"
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.analysisResult.collect { result ->
+                result?.let {
+                    if (it.isComplete) {
+                        val intent = Intent(this@MainActivity, BatteryTestResultsActivity::class.java).apply {
+                            putExtra(BatteryTestResultsActivity.EXTRA_BATTERY_RESULT, it)
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
+
+    // FIXED: Proper toggle logic with correct arrows
+    private fun toggleSection(
+        header: View,
+        content: View,
+        sectionName: String,
+        isExpanded: Boolean,
+        setExpanded: (Boolean) -> Unit
+    ) {
+        if (isExpanded) {
+            // Currently open, so close it
+            content.visibility = View.GONE
+            if (header is android.widget.TextView) {
+                header.text = "▶ $sectionName"
+            }
+            setExpanded(false)
+        } else {
+            // Currently closed, so open it
+            content.visibility = View.VISIBLE
+            if (header is android.widget.TextView) {
+                header.text = "▼ $sectionName"
+            }
+            setExpanded(true)
+        }
+    }
+
+    private fun requestOverlayPermission() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Overlay Permission Required")
+            .setMessage("To display the overlay HUD, we need permission to draw over other apps.")
+            .setPositiveButton("Grant Permission") { _, _ ->
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                overlayPermissionLauncher.launch(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun startOverlayService() {
+        val intent = Intent(this, OverlayService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
+        updateOverlayButtonText()
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Overlay Started")
+            .setMessage("The overlay HUD is now running. You can see it on your home screen.")
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun showBatteryTestSetup() {
+        val dialog = BatteryTestSetupDialog(this) { durationMinutes, gameName, systemName ->
+            viewModel.startBatteryAnalysis(durationMinutes, gameName, systemName)
+        }
+        dialog.show()
+    }
+
+    private fun requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private fun checkUsageStatsPermission(): Boolean {
+        val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), packageName)
+        } else {
+            @Suppress("DEPRECATION")
+            appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), packageName)
+        }
+        return mode == AppOpsManager.MODE_ALLOWED
+    }
+
+    private fun requestUsageStatsPermission() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Usage Stats Permission Required")
+            .setMessage("To analyze app battery consumption, we need permission to access usage statistics.")
+            .setPositiveButton("Grant Permission") { _, _ ->
+                startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showPermissionExplanation(message: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Permission Required")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+}
