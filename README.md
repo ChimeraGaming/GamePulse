@@ -19,7 +19,8 @@ GamePulse tracks gameplay performance in real time and organizes battery, RAM, a
 ## Project Links
 Issues: https://github.com/ChimeraGaming/GamePulse/issues  
 Releases: https://github.com/ChimeraGaming/GamePulse/releases  
-License: https://github.com/ChimeraGaming/GamePulse/blob/main/LICENSE
+Changelog: https://github.com/ChimeraGaming/GamePulse/blob/main/CHANGELOG.md  
+License: https://github.com/ChimeraGaming/GamePulse/blob/main/LICENSE  
 
 ---
 
@@ -33,20 +34,20 @@ Each tracked game includes:
 - Platform tag (Android or emulator)
 
 Sorting options:
-- Battery (Best First)
-- Battery (Worst First)
-- RAM (Lowest First)
-- RAM (Highest First)
+- Battery Best First
+- Battery Worst First
+- RAM Lowest First
+- RAM Highest First
 - Alphabetical
 
 ### Battery Monitoring
 Live battery observations with adjustable polling and update intervals.
 
 ### RAM Monitoring
-Real-time memory usage while games are active.
+Real time memory usage while games are active.
 
 ### Battery Test
-A controlled drain test that measures runtime performance and heat behavior under load.
+A controlled drain test that measures runtime performance and thermal behavior.
 
 ### App Themes
 Theme presets that adjust the UI layout and visual style.
@@ -61,17 +62,17 @@ Requirements:
 
 Steps:
 1. Clone the repository: git clone https://github.com/ChimeraGaming/GamePulse.git
-2. Open the folder in Android Studio.
-3. Allow Gradle to sync.
-4. Select a device or emulator.
-5. Run the build using Android Studio.
+2. Open the folder in Android Studio
+3. Allow Gradle to sync
+4. Select a device or emulator
+5. Run the build using Android Studio
 
 ---
 
 ## Development Status and Roadmap
 This project is currently in beta. Upcoming improvements include:
-- Full code cleanup and structure refinement for v1.0
-- Improved battery and RAM polling efficiency
+- Full code cleanup and structure refinements for v1.0
+- Optimized battery and RAM polling
 - Expanded game metadata collection
 - Optional overlay or HUD monitoring tools
 - Exportable performance summaries
@@ -80,9 +81,28 @@ This project is currently in beta. Upcoming improvements include:
 ---
 
 ## Screenshots
-Screenshots will be added after being uploaded into the /assets or /docs directory.
+
+Free Movement Overlay
+
+<img width="286" height="163" alt="Overlay" src="https://github.com/user-attachments/assets/bf36b554-fb57-4d08-9f87-01c760f9682d" />
+
+Monitoring
+
+<img width="274" height="293" alt="Monitoring" src="https://github.com/user-attachments/assets/1a04b1bc-35a4-4ed2-94c0-92ee86621539" />
+
+HUD
+
+<img width="1013" height="311" alt="HUD" src="https://github.com/user-attachments/assets/cc2e5dd1-5ee4-4b35-8c83-b912d5594b79" />
+
+Theme Example
+
+<img width="289" height="516" alt="Rainbow_SNES" src="https://github.com/user-attachments/assets/9b71eb5c-36d2-4aec-a5c7-e28b149106fe" />
+
+Game Collection (Coming in v.0.4)
+
+<img width="359" height="800" alt="Game_Collection" src="https://github.com/user-attachments/assets/1582e926-d075-46da-9ccf-92905ebff84c" />
 
 ---
 
 ## Disclaimer
-> ⚠️ This is my first Android app, so ALL code sections still contain personal notes and temporary structures. These will be cleaned during the v1.0 refactor.
+> ⚠️ This is my first Android app, so all code sections still contain personal notes and temporary structures. These will be cleaned during the v1.0 refactor.
