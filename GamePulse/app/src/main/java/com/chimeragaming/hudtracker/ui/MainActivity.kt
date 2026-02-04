@@ -14,12 +14,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chimeragaming.gamepulse.BuildConfig
 import com.chimeragaming.gamepulse.R
 import com.chimeragaming.gamepulse.databinding.ActivityMainBinding
 import com.chimeragaming.gamepulse.service.OverlayService
@@ -29,6 +31,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
+/*
+ * ╔═══════════════════════════════════════════════════════════════════════╗
+ * ║                        MAIN ACTIVITY                                  ║
+ * ║                   GamePulse Performance Tracker                       ║
+ * ║                 v0.3.2 - SNES Rainbow Theme Support                   ║
+ * ╚═══════════════════════════════════════════════════════════════════════╝
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -60,6 +69,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // CRITICAL: Apply theme BEFORE setContentView
+        ThemeManager.applyTheme(this)
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -76,8 +88,13 @@ class MainActivity : AppCompatActivity() {
         updateOverlayButtonText()
     }
 
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║                          SETUP UI COMPONENTS                          ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
+     */
     private fun setupUI() {
-        // Update interval spinner - UPDATED WITH 4 OPTIONS
+        // Update interval spinner
         val intervals = arrayOf("1 second", "10 seconds", "30 seconds", "60 seconds")
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, intervals)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -107,6 +124,29 @@ class MainActivity : AppCompatActivity() {
             adapter = appUsageAdapter
         }
 
+        // Setup version badge
+        try {
+            binding.versionBadge!!.text = "v${BuildConfig.VERSION_NAME}"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            binding.versionBadge!!.text = "v0.3.2"
+        }
+
+        // Version badge click listener
+        binding.versionBadge!!.setOnClickListener {
+            copyWebsiteToClipboard()
+        }
+
+        // Changelog badge click listener
+        binding.changelogBadge!!.setOnClickListener {
+            openChangelog()
+        }
+
+        // Issues badge click listener
+        binding.issuesBadge!!.setOnClickListener {
+            openIssues()
+        }
+
         // Button listeners
         binding.enableHudButton!!.setOnClickListener {
             startActivity(Intent(this, HudOverlayActivity::class.java))
@@ -124,12 +164,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Game Collection button (with null check)
-        binding.gameCollectionButton?.setOnClickListener {
+        // Game Collection button
+        binding.gameCollectionButton!!.setOnClickListener {
             startActivity(Intent(this, GameCollectionActivity::class.java))
         }
 
-        // Collapsible sections - FIXED LOGIC
+        // Collapsible sections
         binding.batteryMonitoringHeader!!.setOnClickListener {
             toggleSection(
                 binding.batteryMonitoringHeader!!,
@@ -157,16 +197,13 @@ class MainActivity : AppCompatActivity() {
             ) { batteryTestExpanded = it }
         }
 
-        // Themes section (with null check)
-        binding.themesHeader?.setOnClickListener {
-            binding.themesContent?.let { content ->
-                toggleSection(
-                    binding.themesHeader!!,
-                    content,
-                    "App Themes",
-                    themesExpanded
-                ) { themesExpanded = it }
-            }
+        binding.themesHeader!!.setOnClickListener {
+            toggleSection(
+                binding.themesHeader!!,
+                binding.themesContent!!,
+                "App Themes",
+                themesExpanded
+            ) { themesExpanded = it }
         }
 
         binding.startAnalysisButton.setOnClickListener {
@@ -183,6 +220,9 @@ class MainActivity : AppCompatActivity() {
 
         updateOverlayButtonText()
         setupThemeSpinner()
+
+        // Apply SNES Rainbow colors if that theme is active
+        applySNESRainbowColors()
     }
 
     private fun updateOverlayButtonText() {
@@ -195,7 +235,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun isOverlayRunning(): Boolean {
         return try {
-            // Check if overlay service is running
             val manager = getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
             manager.getRunningServices(Integer.MAX_VALUE).any {
                 it.service.className == OverlayService::class.java.name
@@ -217,7 +256,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupThemeSpinner() {
         try {
-            // Check if views exist
             val spinner = binding.themeSpinner ?: return
             val currentText = binding.currentThemeText ?: return
 
@@ -244,7 +282,7 @@ class MainActivity : AppCompatActivity() {
                         ThemeManager.setTheme(this@MainActivity, selectedTheme)
                         currentText.text = ThemeManager.getThemeDisplayName(selectedTheme)
 
-                        Snackbar.make(binding.root, getString(R.string.theme_applied), Snackbar.LENGTH_LONG)
+                        Snackbar.make(binding.root, "Theme applied! Tap Restart to see changes.", Snackbar.LENGTH_LONG)
                             .setAction("Restart") { recreate() }
                             .show()
                     }
@@ -256,6 +294,47 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║                    SNES RAINBOW SECTION COLORS                        ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
+     */
+    private fun applySNESRainbowColors() {
+        val currentTheme = ThemeManager.getCurrentTheme(this)
+
+        if (currentTheme == ThemeManager.THEME_SNES_RAINBOW) {
+            // Apply SNES button colors to section headers
+            try {
+                // 🟦 X-Button Blue → Battery Monitoring
+                binding.batteryMonitoringHeader?.setTextColor(
+                    android.graphics.Color.parseColor("#3A66FF")
+                )
+
+                // 🟩 Y-Button Green → RAM Monitoring
+                binding.ramMonitoringHeader?.setTextColor(
+                    android.graphics.Color.parseColor("#3CB44A")
+                )
+
+                // 🟨 B-Button Yellow → Battery Test
+                binding.batteryTestHeader?.setTextColor(
+                    android.graphics.Color.parseColor("#E6C32F")
+                )
+
+                // 🟥 A-Button Red → App Themes
+                binding.themesHeader?.setTextColor(
+                    android.graphics.Color.parseColor("#D93A3A")
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║                         OBSERVERS                                     ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
+     */
     private fun setupObservers() {
         lifecycleScope.launch {
             viewModel.batteryInfo.collect { batteryInfo ->
@@ -320,9 +399,13 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    // FIXED: Proper toggle logic with correct arrows
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║                      COLLAPSIBLE SECTIONS                             ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
+     */
     private fun toggleSection(
-        header: View,
+        header: TextView,
         content: View,
         sectionName: String,
         isExpanded: Boolean,
@@ -331,30 +414,49 @@ class MainActivity : AppCompatActivity() {
         if (isExpanded) {
             // Currently open, so close it
             content.visibility = View.GONE
-            if (header is android.widget.TextView) {
-                header.text = "▶ $sectionName"
-            }
+            header.text = "▶ $sectionName"
             setExpanded(false)
         } else {
             // Currently closed, so open it
             content.visibility = View.VISIBLE
-            if (header is android.widget.TextView) {
-                header.text = "▼ $sectionName"
-            }
+            header.text = "▼ $sectionName"
             setExpanded(true)
         }
     }
 
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║                        BADGE ACTIONS                                  ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
+     */
+    private fun copyWebsiteToClipboard() {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("GamePulse Website", "https://github.com/ChimeraGaming/GamePulse")
+        clipboard.setPrimaryClip(clip)
+        Snackbar.make(binding.root, "Website copied to clipboard", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun openChangelog() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ChimeraGaming/GamePulse/blob/main/CHANGELOG.md"))
+        startActivity(intent)
+    }
+
+    private fun openIssues() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ChimeraGaming/GamePulse/issues"))
+        startActivity(intent)
+    }
+
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║                        PERMISSIONS                                    ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
+     */
     private fun requestOverlayPermission() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Overlay Permission Required")
-            .setMessage("To display the overlay HUD, we need permission to draw over other apps.")
-            .setPositiveButton("Grant Permission") { _, _ ->
-                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-                overlayPermissionLauncher.launch(intent)
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        val intent = Intent(
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:$packageName")
+        )
+        overlayPermissionLauncher.launch(intent)
     }
 
     private fun startOverlayService() {
@@ -391,10 +493,18 @@ class MainActivity : AppCompatActivity() {
     private fun checkUsageStatsPermission(): Boolean {
         val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), packageName)
+            appOps.unsafeCheckOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                packageName
+            )
         } else {
             @Suppress("DEPRECATION")
-            appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), packageName)
+            appOps.checkOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                packageName
+            )
         }
         return mode == AppOpsManager.MODE_ALLOWED
     }
@@ -402,8 +512,8 @@ class MainActivity : AppCompatActivity() {
     private fun requestUsageStatsPermission() {
         MaterialAlertDialogBuilder(this)
             .setTitle("Usage Stats Permission Required")
-            .setMessage("To analyze app battery consumption, we need permission to access usage statistics.")
-            .setPositiveButton("Grant Permission") { _, _ ->
+            .setMessage("This permission is needed to detect running apps for battery analysis.")
+            .setPositiveButton("Grant") { _, _ ->
                 startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
             }
             .setNegativeButton("Cancel", null)

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme - Using GitHub Dark Theme -->
+
+    <!--
+    ╔═══════════════════════════════════════════════════════════════════════╗
+    ║                          BASE THEMES                                  ║
+    ╚═══════════════════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- Base Dark Theme (GitHub Dark) -->
     <style name="Base.Theme.HUDTracker" parent="Theme.Material3.Dark.NoActionBar">
-        <!-- GitHub Dark Theme Colors -->
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
@@ -26,4 +32,194 @@
     </style>
 
     <style name="Theme.HUDTracker" parent="Base.Theme.HUDTracker" />
+
+    <!--
+    ╔═══════════════════════════════════════════════════════════════════════╗
+    ║                        CUSTOM THEMES                                  ║
+    ╚═══════════════════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- AMOLED Black Theme - Pure Black for OLED -->
+    <style name="Theme.HUDTracker.Amoled" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#1A1A1A</item>
+        <item name="colorOnPrimaryContainer">#FFFFFF</item>
+        <item name="colorSecondary">#BB86FC</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSecondaryContainer">#2D2D2D</item>
+        <item name="colorOnSecondaryContainer">#E1BEE7</item>
+        <item name="colorTertiary">#03DAC6</item>
+        <item name="colorOnTertiary">#000000</item>
+        <item name="android:colorBackground">#000000</item>
+        <item name="colorOnBackground">#FFFFFF</item>
+        <item name="colorSurface">#000000</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="colorSurfaceVariant">#121212</item>
+        <item name="colorError">#CF6679</item>
+    </style>
+
+    <!-- Reactor Neon Theme - Matrix Green (Formerly Gaming Neon) -->
+    <style name="Theme.HUDTracker.ReactorNeon" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">#00FF41</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#003D1A</item>
+        <item name="colorOnPrimaryContainer">#00FF41</item>
+        <item name="colorSecondary">#39FF14</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSecondaryContainer">#1A4D00</item>
+        <item name="colorOnSecondaryContainer">#76FF03</item>
+        <item name="colorTertiary">#00E676</item>
+        <item name="colorOnTertiary">#000000</item>
+        <item name="android:colorBackground">#0A0E0A</item>
+        <item name="colorOnBackground">#00FF41</item>
+        <item name="colorSurface">#0D1F0D</item>
+        <item name="colorOnSurface">#00FF41</item>
+        <item name="colorSurfaceVariant">#1A331A</item>
+        <item name="colorError">#FF1744</item>
+    </style>
+
+    <!-- Cyberpunk Theme - Hot Pink, Cyan & Yellow (VS Code Style) -->
+    <style name="Theme.HUDTracker.Cyberpunk" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary: Hot Pink/Magenta (Buttons) -->
+        <item name="colorPrimary">#FF0080</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4D0026</item>
+        <item name="colorOnPrimaryContainer">#FFE600</item> <!-- Yellow text on pink containers -->
+
+        <!-- Secondary: Neon Cyan (Links, Icons) -->
+        <item name="colorSecondary">#00D9FF</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSecondaryContainer">#004D66</item>
+        <item name="colorOnSecondaryContainer">#FFE600</item> <!-- Yellow text on cyan containers -->
+
+        <!-- Tertiary: Neon Yellow (Accents, Headers) -->
+        <item name="colorTertiary">#FFE600</item>
+        <item name="colorOnTertiary">#1A0033</item>
+        <item name="colorTertiaryContainer">#665C00</item>
+        <item name="colorOnTertiaryContainer">#FFFF80</item>
+
+        <!-- Background: Deep Purple -->
+        <item name="android:colorBackground">#1E1E3F</item>
+        <item name="colorOnBackground">#E0E0FF</item>
+
+        <!-- Surface: Darker Purple -->
+        <item name="colorSurface">#2A2A5A</item>
+        <item name="colorOnSurface">#FFE600</item> <!-- Yellow primary text -->
+        <item name="colorSurfaceVariant">#3D3D6B</item>
+        <item name="colorOnSurfaceVariant">#00D9FF</item> <!-- Cyan secondary text -->
+
+        <!-- Error: Hot Pink -->
+        <item name="colorError">#FF0080</item>
+        <item name="colorOnError">#FFFFFF</item>
+    </style>
+
+    <!-- Neon Ember Theme - CRT Orange/Amber (Formerly Retro Console) -->
+    <style name="Theme.HUDTracker.NeonEmber" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">#FF6600</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#4D1F00</item>
+        <item name="colorOnPrimaryContainer">#FFB380</item>
+        <item name="colorSecondary">#FFAA00</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSecondaryContainer">#663D00</item>
+        <item name="colorOnSecondaryContainer">#FFD580</item>
+        <item name="colorTertiary">#FF9500</item>
+        <item name="colorOnTertiary">#000000</item>
+        <item name="android:colorBackground">#1A0F00</item>
+        <item name="colorOnBackground">#FF9966</item>
+        <item name="colorSurface">#2D1A00</item>
+        <item name="colorOnSurface">#FFAA66</item>
+        <item name="colorSurfaceVariant">#4D2900</item>
+        <item name="colorError">#FF3D00</item>
+    </style>
+
+    <!-- SNES Theme - Classic Super Nintendo Colors -->
+    <style name="Theme.HUDTracker.SNES" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary: SNES Purple -->
+        <item name="colorPrimary">#8B89C6</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4A4870</item>
+        <item name="colorOnPrimaryContainer">#D4D3E8</item>
+
+        <!-- Secondary: SNES Gray/Silver -->
+        <item name="colorSecondary">#BABABA</item>
+        <item name="colorOnSecondary">#2C2C2C</item>
+        <item name="colorSecondaryContainer">#696969</item>
+        <item name="colorOnSecondaryContainer">#E8E8E8</item>
+
+        <!-- Tertiary: SNES Button Colors (Mixed) -->
+        <item name="colorTertiary">#9B9BCF</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+
+        <!-- Background: Dark Purple-Gray -->
+        <item name="android:colorBackground">#2C2A3D</item>
+        <item name="colorOnBackground">#D4D3E8</item>
+
+        <!-- Surface: SNES Controller Gray -->
+        <item name="colorSurface">#3D3B52</item>
+        <item name="colorOnSurface">#D4D3E8</item>
+        <item name="colorSurfaceVariant">#52506A</item>
+        <item name="colorOnSurfaceVariant">#C4C3D8</item>
+
+        <!-- Error: SNES Red Button -->
+        <item name="colorError">#E74C3C</item>
+        <item name="colorOnError">#FFFFFF</item>
+    </style>
+
+    <!-- SNES Rainbow Theme - Identical to SNES but with programmatic section colors -->
+    <style name="Theme.HUDTracker.SNESRainbow" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Identical to SNES Theme -->
+
+        <!-- Primary: SNES Purple -->
+        <item name="colorPrimary">#8B89C6</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4A4870</item>
+        <item name="colorOnPrimaryContainer">#D4D3E8</item>
+
+        <!-- Secondary: SNES Gray/Silver -->
+        <item name="colorSecondary">#BABABA</item>
+        <item name="colorOnSecondary">#2C2C2C</item>
+        <item name="colorSecondaryContainer">#696969</item>
+        <item name="colorOnSecondaryContainer">#E8E8E8</item>
+
+        <!-- Tertiary: SNES Button Colors (Mixed) -->
+        <item name="colorTertiary">#9B9BCF</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+
+        <!-- Background: Dark Purple-Gray -->
+        <item name="android:colorBackground">#2C2A3D</item>
+        <item name="colorOnBackground">#D4D3E8</item>
+
+        <!-- Surface: SNES Controller Gray -->
+        <item name="colorSurface">#3D3B52</item>
+        <item name="colorOnSurface">#D4D3E8</item>
+        <item name="colorSurfaceVariant">#52506A</item>
+        <item name="colorOnSurfaceVariant">#C4C3D8</item>
+
+        <!-- Error: SNES Red Button -->
+        <item name="colorError">#E74C3C</item>
+        <item name="colorOnError">#FFFFFF</item>
+    </style>
+
+    <!-- Light Theme -->
+    <style name="Theme.HUDTracker.Light" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">#1976D2</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#BBDEFB</item>
+        <item name="colorOnPrimaryContainer">#004B8D</item>
+        <item name="colorSecondary">#388E3C</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSecondaryContainer">#C8E6C9</item>
+        <item name="colorOnSecondaryContainer">#1B5E20</item>
+        <item name="colorTertiary">#7B1FA2</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="colorSurface">#F5F5F5</item>
+        <item name="colorOnSurface">#000000</item>
+        <item name="colorSurfaceVariant">#E0E0E0</item>
+        <item name="colorError">#D32F2F</item>
+    </style>
+
 </resources>

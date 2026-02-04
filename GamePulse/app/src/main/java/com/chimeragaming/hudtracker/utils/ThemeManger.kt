@@ -1,11 +1,15 @@
 package com.chimeragaming.gamepulse.utils
 
+import android.app.Activity
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
+import com.chimeragaming.gamepulse.R
 
-/**
- * Manager for app-wide theme selection
- * v0.3: Added theme management with multiple options
+/*
+ * ╔═══════════════════════════════════════════════════════════════════════╗
+ * ║                        THEME MANAGER                                  ║
+ * ║                   GamePulse Performance Tracker                       ║
+ * ║                  v0.3.2 - Added SNES Rainbow Theme                    ║
+ * ╚═══════════════════════════════════════════════════════════════════════╝
  */
 object ThemeManager {
 
@@ -16,9 +20,11 @@ object ThemeManager {
     const val THEME_DARK = "dark"
     const val THEME_AMOLED = "amoled"
     const val THEME_LIGHT = "light"
-    const val THEME_GAMING_NEON = "gaming_neon"
+    const val THEME_REACTOR_NEON = "reactor_neon"
     const val THEME_CYBERPUNK = "cyberpunk"
-    const val THEME_RETRO = "retro"
+    const val THEME_NEON_EMBER = "neon_ember"
+    const val THEME_SNES = "snes"
+    const val THEME_SNES_RAINBOW = "snes_rainbow"
 
     /**
      * Get all available theme options
@@ -28,9 +34,11 @@ object ThemeManager {
             THEME_DARK,
             THEME_AMOLED,
             THEME_LIGHT,
-            THEME_GAMING_NEON,
+            THEME_REACTOR_NEON,
             THEME_CYBERPUNK,
-            THEME_RETRO
+            THEME_NEON_EMBER,
+            THEME_SNES,
+            THEME_SNES_RAINBOW
         )
     }
 
@@ -42,9 +50,11 @@ object ThemeManager {
             "Dark (Default)",
             "AMOLED Black",
             "Light",
-            "Gaming Neon",
+            "Reactor Neon",
             "Cyberpunk",
-            "Retro Console"
+            "Neon Ember",
+            "SNES",
+            "SNES Rainbow"
         )
     }
 
@@ -57,29 +67,31 @@ object ThemeManager {
     }
 
     /**
-     * Set and apply theme
+     * Set theme (save to preferences)
      */
     fun setTheme(context: Context, theme: String) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().putString(KEY_THEME, theme).apply()
-
-        // Apply theme based on selection
-        when (theme) {
-            THEME_LIGHT -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-            THEME_DARK, THEME_AMOLED, THEME_GAMING_NEON, THEME_CYBERPUNK, THEME_RETRO -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
     }
 
     /**
-     * Apply theme on app start
+     * Apply theme to activity (must be called BEFORE setContentView)
      */
-    fun applyTheme(context: Context) {
-        val theme = getCurrentTheme(context)
-        setTheme(context, theme)
+    fun applyTheme(activity: Activity) {
+        val theme = getCurrentTheme(activity)
+
+        val themeResId = when (theme) {
+            THEME_AMOLED -> R.style.Theme_HUDTracker_Amoled
+            THEME_LIGHT -> R.style.Theme_HUDTracker_Light
+            THEME_REACTOR_NEON -> R.style.Theme_HUDTracker_ReactorNeon
+            THEME_CYBERPUNK -> R.style.Theme_HUDTracker_Cyberpunk
+            THEME_NEON_EMBER -> R.style.Theme_HUDTracker_NeonEmber
+            THEME_SNES -> R.style.Theme_HUDTracker_SNES
+            THEME_SNES_RAINBOW -> R.style.Theme_HUDTracker_SNESRainbow
+            else -> R.style.Theme_HUDTracker // Dark default
+        }
+
+        activity.setTheme(themeResId)
     }
 
     /**
@@ -90,9 +102,11 @@ object ThemeManager {
             THEME_DARK -> "Dark (Default)"
             THEME_AMOLED -> "AMOLED Black"
             THEME_LIGHT -> "Light"
-            THEME_GAMING_NEON -> "Gaming Neon"
+            THEME_REACTOR_NEON -> "Reactor Neon"
             THEME_CYBERPUNK -> "Cyberpunk"
-            THEME_RETRO -> "Retro Console"
+            THEME_NEON_EMBER -> "Neon Ember"
+            THEME_SNES -> "SNES"
+            THEME_SNES_RAINBOW -> "SNES Rainbow"
             else -> "Dark (Default)"
         }
     }

@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -17,15 +18,21 @@ import com.chimeragaming.gamepulse.utils.BatteryThemeRenderer
 import com.chimeragaming.gamepulse.utils.RAMUtils
 import com.chimeragaming.gamepulse.utils.RamThemeRenderer
 import com.chimeragaming.gamepulse.utils.SharedPreferencesManager
+import com.chimeragaming.gamepulse.utils.ThemeManager
 import kotlinx.coroutines.launch
 
-/**
- * HUD Overlay Activity for displaying compact system information
- * v0.3: Updated to use correct total RAM and handle theme updates
+/*
+ * ╔═══════════════════════════════════════════════════════════════════════╗
+ * ║                    HUD OVERLAY ACTIVITY                               ║
+ * ║                   GamePulse Performance Tracker                       ║
+ * ║         v0.3.2 - Theme Support + Dual Screen & Crash Protection       ║
+ * ╚═══════════════════════════════════════════════════════════════════════╝
  */
 class HudOverlayActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHudOverlayBinding
+    private var _binding: ActivityHudOverlayBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var prefsManager: SharedPreferencesManager
     private lateinit var ramThemeRenderer: RamThemeRenderer
     private lateinit var batteryThemeRenderer: BatteryThemeRenderer
@@ -38,15 +45,20 @@ class HudOverlayActivity : AppCompatActivity() {
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as BatteryMonitorService.LocalBinder
-            batteryMonitorService = binder.getService()
-            isServiceBound = true
+            try {
+                val binder = service as BatteryMonitorService.LocalBinder
+                batteryMonitorService = binder.getService()
+                isServiceBound = true
 
-            // Observe battery info from service
-            lifecycleScope.launch {
-                batteryMonitorService?.batteryInfo?.collect { info ->
-                    updateBatteryDisplay(info)
+                lifecycleScope.launch {
+                    batteryMonitorService?.batteryInfo?.collect { info ->
+                        if (_binding != null) {
+                            updateBatteryDisplay(info)
+                        }
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 
@@ -57,99 +69,179 @@ class HudOverlayActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // CRITICAL: Apply theme BEFORE setContentView
+        try {
+            ThemeManager.applyTheme(this)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         super.onCreate(savedInstanceState)
-        binding = ActivityHudOverlayBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        prefsManager = SharedPreferencesManager(this)
-        ramThemeRenderer = RamThemeRenderer(this)
-        batteryThemeRenderer = BatteryThemeRenderer(this)
+        try {
+            _binding = ActivityHudOverlayBinding.inflate(layoutInflater)
+            setContentView(binding.root)
 
-        setupUI()
-        startBatteryMonitoring()
-        startPeriodicUpdates()
+            prefsManager = SharedPreferencesManager(this)
+            ramThemeRenderer = RamThemeRenderer(this)
+            batteryThemeRenderer = BatteryThemeRenderer(this)
+
+            setupUI()
+            startBatteryMonitoring()
+            startPeriodicUpdates()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            finish()
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        try {
+            if (_binding != null) {
+                updateRAMDisplay()
+                batteryMonitorService?.batteryInfo?.value?.let { updateBatteryDisplay(it) }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun setupUI() {
-        binding.closeButton.setOnClickListener {
-            finish()
-        }
+        try {
+            binding.closeButton.setOnClickListener {
+                finish()
+            }
 
-        binding.settingsButton.setOnClickListener {
-            showSettingsDialog()
+            binding.settingsButton.setOnClickListener {
+                showSettingsDialog()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     private fun startBatteryMonitoring() {
-        val intent = Intent(this, BatteryMonitorService::class.java)
-        startForegroundService(intent)
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        try {
+            val intent = Intent(this, BatteryMonitorService::class.java)
+            startForegroundService(intent)
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun startPeriodicUpdates() {
         updateRunnable = object : Runnable {
             override fun run() {
-                updateRAMDisplay()
-                handler.postDelayed(this, prefsManager.refreshRate * 1000L)
+                if (_binding != null && !isFinishing && !isDestroyed) {
+                    try {
+                        updateRAMDisplay()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                    val refreshRate = try {
+                        prefsManager.refreshRate
+                    } catch (e: Exception) {
+                        10
+                    }
+
+                    handler.postDelayed(this, refreshRate * 1000L)
+                }
             }
         }
         handler.post(updateRunnable!!)
     }
 
-    // v0.3: Fixed to show correct total RAM and type conversions
     private fun updateRAMDisplay() {
-        val ramInfo = RAMUtils.getRAMInfo(this)
-        ramInfo?.let {
-            // Update header text - use getTotalMemoryFormatted() for proper display
-            binding.ramHeaderText.text = String.format(
-                "RAM: %.2f/%s GB",
-                it.usedMemoryGB,
-                it.getTotalMemoryFormatted()
-            )
+        if (_binding == null || isFinishing || isDestroyed) {
+            return
+        }
 
-            // Render RAM indicators based on theme
-            // v0.3 FIX: usedGB as Float, totalGB as Int
-            ramThemeRenderer.renderRAM(
-                binding.ramIndicatorsContainer,
-                it.usedMemoryGB.toFloat(),
-                it.totalMemoryGB.toInt(),
-                prefsManager.ramTheme
-            )
+        try {
+            val ramInfo = RAMUtils.getRAMInfo(this)
+            ramInfo?.let {
+                binding.ramHeaderText.text = String.format(
+                    "RAM: %.2f/%s GB",
+                    it.usedMemoryGB,
+                    it.getTotalMemoryFormatted()
+                )
+
+                ramThemeRenderer.renderRAM(
+                    binding.ramIndicatorsContainer,
+                    it.usedMemoryGB.toFloat(),
+                    it.totalMemoryGB.toInt(),
+                    prefsManager.ramTheme
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     private fun updateBatteryDisplay(batteryInfo: BatteryInfo?) {
-        batteryThemeRenderer.renderBattery(
-            binding.batteryStatsPanel,
-            binding.batteryPowerCell,
-            binding.batteryGauge,
-            binding.batteryMinimal,
-            batteryInfo,
-            prefsManager.batteryTheme
-        )
+        if (_binding == null || isFinishing || isDestroyed) {
+            return
+        }
+
+        try {
+            batteryThemeRenderer.renderBattery(
+                binding.batteryStatsPanel,
+                binding.batteryPowerCell,
+                binding.batteryGauge,
+                binding.batteryMinimal,
+                batteryInfo,
+                prefsManager.batteryTheme
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun showSettingsDialog() {
-        val dialog = HudSettingsDialog(this) { refreshRate, ramTheme, batteryTheme ->
-            // Save preferences
-            prefsManager.refreshRate = refreshRate // If it expects Int            prefsManager.batteryTheme = batteryTheme
+        try {
+            val dialog = HudSettingsDialog(this) { refreshRate, ramTheme, batteryTheme ->
+                try {
+                    prefsManager.refreshRate = refreshRate
+                    prefsManager.ramTheme = ramTheme
+                    prefsManager.batteryTheme = batteryTheme
 
-            // Restart periodic updates with new refresh rate
-            updateRunnable?.let { handler.removeCallbacks(it) }
-            startPeriodicUpdates()
+                    updateRunnable?.let { handler.removeCallbacks(it) }
+                    startPeriodicUpdates()
 
-            // Update displays immediately
-            updateRAMDisplay()
-            batteryMonitorService?.batteryInfo?.value?.let { updateBatteryDisplay(it) }
+                    updateRAMDisplay()
+                    batteryMonitorService?.batteryInfo?.value?.let { updateBatteryDisplay(it) }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            dialog.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        dialog.show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (isServiceBound) {
-            unbindService(serviceConnection)
+
+        try {
+            if (isServiceBound) {
+                unbindService(serviceConnection)
+                isServiceBound = false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        updateRunnable?.let { handler.removeCallbacks(it) }
+
+        try {
+            updateRunnable?.let { handler.removeCallbacks(it) }
+            updateRunnable = null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        _binding = null
     }
 }

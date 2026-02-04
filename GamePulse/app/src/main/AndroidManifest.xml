@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+    ╔═══════════════════════════════════════════════════════════════════════╗
+    ║                        GAMEPULSE MANIFEST                             ║
+    ║                   GamePulse Performance Tracker                       ║
+    ║                    v0.3.2 - Full Auto Rotation                        ║
+    ╚═══════════════════════════════════════════════════════════════════════╝
+    -->
+
     <!-- Permissions required for battery and system monitoring -->
     <uses-permission android:name="android.permission.BATTERY_STATS"
         tools:ignore="ProtectedPermissions" />
@@ -13,7 +21,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!-- New permissions for v0.3 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
@@ -29,39 +36,67 @@
         android:theme="@style/Theme.HUDTracker"
         tools:targetApi="31">
 
-        <!-- Main Activity -->
+        <!--
+        ╔═══════════════════════════════════════════════════════════════════════╗
+        ║                          MAIN ACTIVITY                                ║
+        ║  fullSensor = Auto-rotate in all directions (N, S, E, W)              ║
+        ╚═══════════════════════════════════════════════════════════════════════╝
+        -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="fullSensor"
+            android:configChanges="orientation|screenSize|screenLayout">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- HUD Overlay Activity -->
+        <!--
+        ╔═══════════════════════════════════════════════════════════════════════╗
+        ║                       HUD OVERLAY ACTIVITY                            ║
+        ║  fullSensor = Auto-rotate in all landscape/portrait modes            ║
+        ╚═══════════════════════════════════════════════════════════════════════╝
+        -->
         <activity
             android:name=".ui.HudOverlayActivity"
             android:exported="false"
-            android:screenOrientation="landscape"
+            android:screenOrientation="fullSensor"
+            android:configChanges="orientation|screenSize|screenLayout"
             android:theme="@style/Theme.HUDTracker" />
 
-        <!-- Battery Test Results Activity -->
+        <!--
+        ╔═══════════════════════════════════════════════════════════════════════╗
+        ║                   BATTERY TEST RESULTS ACTIVITY                       ║
+        ║  fullSensor = Auto-rotate in all directions                          ║
+        ╚═══════════════════════════════════════════════════════════════════════╝
+        -->
         <activity
             android:name=".ui.BatteryTestResultsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
+            android:configChanges="orientation|screenSize|screenLayout"
             android:theme="@style/Theme.HUDTracker" />
 
-        <!-- v0.3 NEW: Game Collection Activity -->
+        <!--
+        ╔═══════════════════════════════════════════════════════════════════════╗
+        ║                     GAME COLLECTION ACTIVITY                          ║
+        ║  fullSensor = Auto-rotate in all directions                          ║
+        ╚═══════════════════════════════════════════════════════════════════════╝
+        -->
         <activity
             android:name=".ui.GameCollectionActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
+            android:configChanges="orientation|screenSize|screenLayout"
             android:theme="@style/Theme.HUDTracker" />
 
-        <!-- Services for monitoring -->
+        <!--
+        ╔═══════════════════════════════════════════════════════════════════════╗
+        ║                        BACKGROUND SERVICES                            ║
+        ╚═══════════════════════════════════════════════════════════════════════╝
+        -->
         <service
             android:name=".service.BatteryMonitorService"
             android:enabled="true"
@@ -79,7 +114,11 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!-- FileProvider for sharing screenshots -->
+        <!--
+        ╔═══════════════════════════════════════════════════════════════════════╗
+        ║                         FILE PROVIDER                                 ║
+        ╚═══════════════════════════════════════════════════════════════════════╝
+        -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

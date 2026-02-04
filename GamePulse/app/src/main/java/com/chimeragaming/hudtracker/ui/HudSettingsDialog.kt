@@ -15,9 +15,12 @@ import com.chimeragaming.gamepulse.utils.RamThemeRenderer
 import com.chimeragaming.gamepulse.utils.SharedPreferencesManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-/**
- * Dialog for configuring HUD settings
- * v0.3: Widened dialog to 90% of screen width
+/*
+ * ╔═══════════════════════════════════════════════════════════════════════╗
+ * ║                      HUD SETTINGS DIALOG                              ║
+ * ║                   GamePulse Performance Tracker                       ║
+ * ║                      v0.3.1 - Fixed Layout                            ║
+ * ╚═══════════════════════════════════════════════════════════════════════╝
  */
 class HudSettingsDialog(
     context: Context,
@@ -27,11 +30,9 @@ class HudSettingsDialog(
     private lateinit var binding: DialogHudSettingsBinding
     private val prefsManager = SharedPreferencesManager(context)
 
-    // Refresh rates in seconds
     private val refreshRates = arrayOf(1, 10, 60)
     private val refreshRateLabels = arrayOf("1 Second", "10 Seconds", "1 Minute")
 
-    // RAM themes
     private val ramThemes = arrayOf(
         RamThemeRenderer.THEME_POWER_CORES,
         RamThemeRenderer.THEME_HEART_CONTAINERS,
@@ -49,7 +50,6 @@ class HudSettingsDialog(
         "Off"
     )
 
-    // Battery themes
     private val batteryThemes = arrayOf(
         BatteryThemeRenderer.THEME_STATS_PANEL,
         BatteryThemeRenderer.THEME_POWER_CELL,
@@ -76,7 +76,6 @@ class HudSettingsDialog(
         setupUI()
     }
 
-    // v0.3: Set dialog width to 90% of screen
     override fun onStart() {
         super.onStart()
         window?.let { dialogWindow ->
@@ -85,63 +84,81 @@ class HudSettingsDialog(
             val size = Point()
             display.getSize(size)
 
-            val width = (size.x * 0.9).toInt() // 90% of screen width
+            val width = (size.x * 0.9).toInt()
             dialogWindow.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
     }
 
     private fun setupUI() {
-        // Setup refresh rate spinner
-        val refreshRateAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, refreshRateLabels)
-        refreshRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.refreshRateSpinner.adapter = refreshRateAdapter
+        setupRefreshRateSpinner()
+        setupRamThemeSpinner()
+        setupBatteryThemeSpinner()
+        setupButtons()
+    }
 
-        // Set current refresh rate
-        val currentRateIndex = refreshRates.indexOf(prefsManager.refreshRate.toInt())
-        if (currentRateIndex >= 0) {
-            binding.refreshRateSpinner.setSelection(currentRateIndex)
+    private fun setupRefreshRateSpinner() {
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, refreshRateLabels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.refreshRateSpinner.adapter = adapter
+
+        val currentRate = prefsManager.refreshRate
+        val currentIndex = refreshRates.indexOf(currentRate)
+        if (currentIndex >= 0) {
+            binding.refreshRateSpinner.setSelection(currentIndex)
+            binding.refreshRateSelectedText.text = refreshRateLabels[currentIndex]
         }
 
-        // Setup RAM theme spinner
-        val ramThemeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, ramThemeLabels)
-        ramThemeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.ramThemeSpinner.adapter = ramThemeAdapter
+        binding.refreshRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                binding.refreshRateSelectedText.text = refreshRateLabels[position]
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
 
-        // Set current RAM theme
-        val currentRamIndex = ramThemes.indexOf(prefsManager.ramTheme)
-        if (currentRamIndex >= 0) {
-            binding.ramThemeSpinner.setSelection(currentRamIndex)
+    private fun setupRamThemeSpinner() {
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, ramThemeLabels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.ramThemeSpinner.adapter = adapter
+
+        val currentIndex = ramThemes.indexOf(prefsManager.ramTheme)
+        if (currentIndex >= 0) {
+            binding.ramThemeSpinner.setSelection(currentIndex)
+            binding.ramThemeSelectedText.text = ramThemeLabels[currentIndex]
         }
 
-        // Setup Battery theme spinner
-        val batteryThemeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, batteryThemeLabels)
-        batteryThemeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.batteryThemeSpinner.adapter = batteryThemeAdapter
-
-        // Set current Battery theme
-        val currentBatteryIndex = batteryThemes.indexOf(prefsManager.batteryTheme)
-        if (currentBatteryIndex >= 0) {
-            binding.batteryThemeSpinner.setSelection(currentBatteryIndex)
-        }
-
-        // Setup listeners for mutual exclusion
         binding.ramThemeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedRamTheme = ramThemes[position]
+                binding.ramThemeSelectedText.text = ramThemeLabels[position]
                 validateThemeSelection()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setupBatteryThemeSpinner() {
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, batteryThemeLabels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.batteryThemeSpinner.adapter = adapter
+
+        val currentIndex = batteryThemes.indexOf(prefsManager.batteryTheme)
+        if (currentIndex >= 0) {
+            binding.batteryThemeSpinner.setSelection(currentIndex)
+            binding.batteryThemeSelectedText.text = batteryThemeLabels[currentIndex]
         }
 
         binding.batteryThemeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedBatteryTheme = batteryThemes[position]
+                binding.batteryThemeSelectedText.text = batteryThemeLabels[position]
                 validateThemeSelection()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
 
-        // Setup buttons
+    private fun setupButtons() {
         binding.cancelButton.setOnClickListener {
             dismiss()
         }
@@ -156,7 +173,6 @@ class HudSettingsDialog(
             val selectedBatteryIndex = binding.batteryThemeSpinner.selectedItemPosition
             val batteryTheme = batteryThemes[selectedBatteryIndex]
 
-            // Validate that both can't be off
             if (ramTheme == RamThemeRenderer.THEME_OFF && batteryTheme == BatteryThemeRenderer.THEME_OFF) {
                 MaterialAlertDialogBuilder(context)
                     .setTitle("Invalid Configuration")
@@ -172,9 +188,9 @@ class HudSettingsDialog(
     }
 
     private fun validateThemeSelection() {
-        // If RAM is set to Off, disable Battery Off option
-        // If Battery is set to Off, disable RAM Off option
-        // This is a simplified validation - a more sophisticated approach would
-        // disable specific spinner items, but Android Spinner doesn't support that easily
+        val bothOff = selectedRamTheme == RamThemeRenderer.THEME_OFF &&
+                selectedBatteryTheme == BatteryThemeRenderer.THEME_OFF
+
+        binding.saveButton.isEnabled = !bothOff
     }
 }

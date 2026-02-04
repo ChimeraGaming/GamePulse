@@ -52,6 +52,6 @@ class GameCollectionSettingsDialog(
                 "• Auto-detect games\n" +
                 "• Custom categories\n" +
                 "• Export statistics\n" +
-                "• Backup/Restore data"
+                "• Screenshot?"
     }
 }

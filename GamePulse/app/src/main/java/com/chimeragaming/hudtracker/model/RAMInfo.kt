@@ -1,8 +1,14 @@
 package com.chimeragaming.gamepulse.model
 
-/**
- * Data class representing RAM usage information
- * v0.3: Updated formatting to handle proper GB display
+/*
+ * ╔═══════════════════════════════════════════════════════════════════════╗
+ * ║                        RAM INFO DATA MODEL                            ║
+ * ║                   GamePulse Performance Tracker                       ║
+ * ╚═══════════════════════════════════════════════════════════════════════╝
+ *
+ *  Data class representing RAM usage information for Android devices.
+ *  Handles memory detection and formatting for display in HUD overlays.
+ *
  */
 data class RAMInfo(
     val totalMemoryMB: Long,
@@ -17,19 +23,31 @@ data class RAMInfo(
             0f
         }
 
-    /**
-     * v0.3: Updated to show proper GB rounding (e.g., 8GB, 12GB, 16GB)
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║  FORMAT TOTAL MEMORY (2GB INCREMENTS: 2→4→6→8...→32GB)               ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
      */
     fun getTotalMemoryFormatted(): String {
         val gb = totalMemoryMB / 1024.0
         return when {
-            gb >= 15.5 -> "16"  // 16GB devices
-            gb >= 11.5 -> "12"  // 12GB devices
-            gb >= 7.5 -> "8"    // 8GB devices
-            gb >= 5.5 -> "6"    // 6GB devices
-            gb >= 3.5 -> "4"    // 4GB devices
-            gb >= 1.0 -> String.format("%.0f", gb)
-            else -> String.format("%.2f GB", gb)
+            gb > 32 -> String.format("%.0f", gb)
+            gb > 30 -> "32"
+            gb > 28 -> "30"
+            gb > 26 -> "28"
+            gb > 24 -> "26"
+            gb > 22 -> "24"
+            gb > 20 -> "22"
+            gb > 18 -> "20"
+            gb > 16 -> "18"
+            gb > 14 -> "16"
+            gb > 12 -> "14"
+            gb > 10 -> "12"
+            gb > 8 -> "10"
+            gb > 6 -> "8"
+            gb > 4 -> "6"
+            gb > 2 -> "4"
+            else -> "2"
         }
     }
 
@@ -41,7 +59,12 @@ data class RAMInfo(
         }
     }
 
-    // v0.3: Helper properties for displaying as GB
+    /*
+     * ╔═══════════════════════════════════════════════════════════════════════╗
+     * ║                     HELPER PROPERTIES - GB CONVERSIONS                ║
+     * ╚═══════════════════════════════════════════════════════════════════════╝
+     */
+
     val totalMemoryGB: Double
         get() = totalMemoryMB / 1024.0
 
