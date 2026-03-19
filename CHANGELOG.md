@@ -4,7 +4,24 @@
 <summary><strong>v0.3 Latest Major</strong></summary>
 
 <details>
-<summary><strong>v0.3.2.2 Latest Patch</strong></summary>
+<summary><strong>v0.3.3 Latest Patch</strong></summary>
+
+### Fixes
+- Fixed overlay causing app crash within ~60 seconds
+  - Verified stable beyond 20+ minutes in testing and on device
+- Fixed battery life estimation
+  - Now properly displays remaining battery life
+  - Added safety locks to prevent incorrect estimates
+
+### Version Updates
+- Version Name 0.3.3
+
+</details>
+
+---
+
+<details>
+<summary><strong>v0.3.2.2</strong></summary>
 
 ### Fixes
 - Fixed Battery Testing screen scrolling issues
