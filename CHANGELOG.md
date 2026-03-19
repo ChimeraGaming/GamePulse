@@ -4,73 +4,101 @@
 <summary><strong>v0.3 Latest Major</strong></summary>
 
 <details>
-<summary><strong>v0.3.2 Latest Patch</strong></summary>
+<summary><strong>v0.3.2.2 Latest Patch</strong></summary>
+
+### Fixes
+- Fixed Battery Testing screen scrolling issues
+- Fixed text sizing inconsistencies in Battery Testing
+
+### Version Updates
+- Version Name 0.3.2.2
+
+</details>
+
+---
+
+<details>
+<summary><strong>v0.3.2.1</strong></summary>
+
+### Notes
+- Scraped release build
+
+### Version Updates
+- Version Name 0.3.2.1
+
+</details>
+
+---
+
+<details>
+<summary><strong>v0.3.2</strong></summary>
 
 ### UI and UX Improvements
-- Sticky badges now stay visible during scrolling
-- Bottom of screen no longer cuts off the Themes section
-- Badges are clickable
-  - Version badge copies the GitHub link to clipboard
+- Sticky badges now remain visible during scrolling
+- Fixed screen bottom clipping (Themes section fully visible)
+- Badges are now interactive:
+  - Version badge copies GitHub release link to clipboard
   - Changelog badge opens CHANGELOG.md
-  - Issues badge opens the GitHub Issues page
-- Full rotation support added in all four directions
+  - Issues badge opens GitHub Issues page
+- Full rotation support added (all four orientations)
 
 ### Theme System Overhaul
-- Themes now initialize before setContentView in all activities
+- Themes now initialize before `setContentView` in all activities
 - Theme selections persist across app restarts
-- Theme renames
-  - Gaming Neon changed to Reactor Neon
-  - Retro Console changed to Neon Ember
-- New themes added
+- Theme renames:
+  - Gaming Neon → Reactor Neon
+  - Retro Console → Neon Ember
+- New themes added:
   - SNES
   - SNES Rainbow
     - 🟦 X Button Blue `#3A66FF` Battery Monitoring
     - 🟩 Y Button Green `#3CB44A` RAM Monitoring
     - 🟨 B Button Yellow `#E6C32F` Battery Test
     - 🟥 A Button Red `#D93A3A` App Themes
-- Cyberpunk theme updated with neon yellow `#FFE600`
-- Total themes 8
-- Added applySNESRainbowColors function for section header color application
+- Cyberpunk theme enhanced with neon yellow `#FFE600`
+- Total themes: 8
+- Added `applySNESRainbowColors()` for dynamic section header styling
 
 ### Battery Improvements
-- Battery estimation now shows correct states
+- Battery estimation now reflects correct states:
   - Calculating when gathering data
   - N A when charging or full
   - Time estimate when discharging
-- Improved estimation logic using voltage readings and time deltas
+- Improved estimation accuracy using voltage and time deltas
 - Fixed notification icon using ic_lock_idle_charging
 - Added estimation state tracking in BatteryInfo
 
 ### RAM Improvements
-- RAM usage now calculated using Total minus Available
+- RAM usage now calculated as Total minus Available
 - Cache and buffer memory excluded from usage
-- Added quarter heart display support for themed RAM indicators
+- Added quarter heart rendering support for themed indicators
 
 ### Crash Protection
-- All activities now use nullable binding pattern with safe cleanup
-- Added try catch blocks for critical calls
-- Added isFinishing and isDestroyed checks to prevent crashes
+- Implemented nullable binding pattern across all activities
+- Added try catch protection for critical operations
+- Added isFinishing and isDestroyed safety checks
 - Added onConfigurationChanged handling
-- Proper resource cleanup in onDestroy
-- Activities protected
-  - MainActivity
-  - HudOverlayActivity
-  - GameCollectionActivity
-  - BatteryTestResultsActivity
+- Ensured proper cleanup in onDestroy
+
+**Protected Activities:**
+- MainActivity
+- HudOverlayActivity
+- GameCollectionActivity
+- BatteryTestResultsActivity
 
 ### Activity Enhancements
-- Themes now apply consistently across all activities
-- Orientation changes fully supported for all screens
-- Improved memory handling across UI components
+- Consistent theme application across all activities
+- Full orientation support across all screens
+- Improved memory handling and lifecycle stability
 
 ### Technical Changes
-- Updated BatteryMonitorService with corrected estimation logic
+- Updated BatteryMonitorService with improved estimation logic
 - Updated BatteryInfo with state tracking
-- Updated BatteryUtils with voltage based estimation logic
-- Updated RAMUtils with corrected calculation
-- Updated RamThemeRenderer with quarter heart logic
-- Updated ThemeManager with all new themes and corrected application
-- Updated MainActivity with improved badge references and SNES Rainbow support
+- Updated BatteryUtils for voltage based calculations
+- Updated RAMUtils with corrected usage logic
+- Updated RamThemeRenderer with quarter heart support
+- Updated ThemeManager with new themes and persistence fixes
+- Updated MainActivity with badge actions and SNES Rainbow support
 - Updated activity_main layout to keep badges visible during scroll
 - Updated AndroidManifest to enable full rotation support
 - Added applySNESRainbowColors function
@@ -111,10 +139,10 @@
 ### Bug Fixes
 - Fixed missing battery drawable
 - Fixed version badge ID mismatch
-- Fixed TextView casting errors in collapsible sections
-- Fixed screen bottom clipping
-- Fixed theme color application failures
-- Fixed battery estimation always showing zero
+- Fixed TextView casting issues in collapsible sections
+- Fixed bottom screen clipping
+- Fixed theme application inconsistencies
+- Fixed battery estimation showing zero
 - Fixed theme persistence issues
 
 ### Version Updates
@@ -129,26 +157,26 @@
 <summary><strong>v0.3.1</strong></summary>
 
 ### UI and UX Improvements
-- Added clickable version badges at the top of the screen
-- Fixed overlay toggle button positioning
-- Improved button alignment and spacing across the UI
-- Version number now automatically updates from build.gradle
+- Added clickable version badges
+- Fixed overlay toggle positioning
+- Improved button alignment and spacing
+- Version number now auto updates from build.gradle
 
 ### Battery and Performance Fixes
-- Battery voltage now updates correctly
-- Battery life estimation fixed
-- Calculating indicator added for initial readings
+- Fixed battery voltage updates
+- Fixed battery life estimation
+- Added calculating indicator for initial readings
 - Battery life estimation requires minimum 5 seconds of data
 - Added battery status detection during charging
 
 ### RAM Monitoring Fixes
-- RAM totals fixed for 16 GB devices
+- Fixed RAM totals on 16GB devices
 - Accurate MB to GB conversion
 - Improved RAM display in all themes
 
 ### Overlay Improvements
 - Movement inversion fixed
-- Fixed crashes caused during configuration changes
+- Fixed crashes during configuration changes
 - Fixed top screen crashes on dual screen devices
 - Added crash safety checks for WindowManager
 - Improved rotation handling and screen mode transitions
