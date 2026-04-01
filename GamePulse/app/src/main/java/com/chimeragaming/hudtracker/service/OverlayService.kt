@@ -15,18 +15,12 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import com.chimeragaming.gamepulse.R
+import com.chimeragaming.gamepulse.model.BatteryInfo
 import com.chimeragaming.gamepulse.ui.MainActivity
 import com.chimeragaming.gamepulse.utils.BatteryUtils
 import com.chimeragaming.gamepulse.utils.RAMUtils
 import com.chimeragaming.gamepulse.utils.SharedPreferencesManager
 
-/*
- * ╔═══════════════════════════════════════════════════════════════════════╗
- * ║                    FLOATING OVERLAY SERVICE                           ║
- * ║                   GamePulse Performance Tracker                       ║
- * ║                  v0.3.1 - Crash Protection Added                      ║
- * ╚═══════════════════════════════════════════════════════════════════════╝
- */
 class OverlayService : Service() {
 
     private var windowManager: WindowManager? = null
@@ -103,11 +97,6 @@ class OverlayService : Service() {
         }
     }
 
-    /*
-     * ╔═══════════════════════════════════════════════════════════════════════╗
-     * ║                       CREATE OVERLAY VIEW                             ║
-     * ╚═══════════════════════════════════════════════════════════════════════╝
-     */
     private fun createOverlayView() {
         try {
             val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater
@@ -153,11 +142,6 @@ class OverlayService : Service() {
         }
     }
 
-    /*
-     * ╔═══════════════════════════════════════════════════════════════════════╗
-     * ║                         TOUCH LISTENER                                ║
-     * ╚═══════════════════════════════════════════════════════════════════════╝
-     */
     private fun setupTouchListener(params: WindowManager.LayoutParams) {
         overlayView?.setOnTouchListener { view, event ->
             try {
@@ -169,6 +153,7 @@ class OverlayService : Service() {
                         initialTouchY = event.rawY
                         true
                     }
+
                     MotionEvent.ACTION_MOVE -> {
                         if (isDestroyed || windowManager == null || overlayView?.isAttachedToWindow != true) {
                             return@setOnTouchListener false
@@ -181,9 +166,11 @@ class OverlayService : Service() {
                             (params.gravity and Gravity.END) == Gravity.END -> {
                                 params.x = initialX - deltaX
                             }
+
                             (params.gravity and Gravity.START) == Gravity.START -> {
                                 params.x = initialX + deltaX
                             }
+
                             else -> {
                                 params.x = initialX + deltaX
                             }
@@ -198,14 +185,16 @@ class OverlayService : Service() {
                         }
                         true
                     }
+
                     MotionEvent.ACTION_UP -> {
-                        val deltaX = Math.abs(event.rawX - initialTouchX)
-                        val deltaY = Math.abs(event.rawY - initialTouchY)
+                        val deltaX = kotlin.math.abs(event.rawX - initialTouchX)
+                        val deltaY = kotlin.math.abs(event.rawY - initialTouchY)
                         if (deltaX < 10 && deltaY < 10) {
                             view.performClick()
                         }
                         true
                     }
+
                     else -> false
                 }
             } catch (e: Exception) {
@@ -215,11 +204,6 @@ class OverlayService : Service() {
         }
     }
 
-    /*
-     * ╔═══════════════════════════════════════════════════════════════════════╗
-     * ║                         START UPDATING                                ║
-     * ╚═══════════════════════════════════════════════════════════════════════╝
-     */
     private fun startUpdating() {
         updateRunnable = object : Runnable {
             override fun run() {
@@ -243,11 +227,6 @@ class OverlayService : Service() {
         updateRunnable?.let { updateHandler.post(it) }
     }
 
-    /*
-     * ╔═══════════════════════════════════════════════════════════════════════╗
-     * ║                         UPDATE STATS                                  ║
-     * ╚═══════════════════════════════════════════════════════════════════════╝
-     */
     private fun updateStats() {
         if (isDestroyed || overlayView?.isAttachedToWindow != true) {
             return
@@ -260,17 +239,7 @@ class OverlayService : Service() {
             val ramText = String.format("RAM: %.1f/%s GB", usedGB, totalGB)
 
             val batteryInfo = BatteryUtils.getBatteryInfo(this)
-            val batteryText = if (batteryInfo != null) {
-                val percentage = batteryInfo.percentage.toInt()
-                val lifeText = if (batteryInfo.estimatedLifeMinutes > 0) {
-                    batteryInfo.getEstimatedLifeFormatted()
-                } else {
-                    "N/A"
-                }
-                "🔋 $lifeText | $percentage%"
-            } else {
-                "🔋 N/A | N/A"
-            }
+            val batteryText = formatBatteryText(batteryInfo)
 
             updateHandler.post {
                 try {
@@ -284,6 +253,19 @@ class OverlayService : Service() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun formatBatteryText(batteryInfo: BatteryInfo?): String {
+        if (batteryInfo == null) {
+            return "BAT N/A"
+        }
+
+        val percentage = batteryInfo.percentage.toInt()
+        return if (batteryInfo.estimatedLifeMinutes > 0) {
+            "BAT ${batteryInfo.getEstimatedLifeFormatted()} | $percentage%"
+        } else {
+            "BAT $percentage%"
         }
     }
 

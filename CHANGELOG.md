@@ -1,7 +1,66 @@
 # Changelog
 
 <details>
-<summary><strong>v0.3 Latest Major</strong></summary>
+<summary><strong>v0.4 Latest Major</strong></summary>
+
+<details>
+<summary><strong>v0.4.2 Latest Patch</strong></summary>
+
+### Added
+- Game Collection edit mode
+- Game image editing and save button
+- Device temperature detection from more thermal sensors
+- Secret diagnostic setting
+
+### Updated
+- Game Collection settings with edit controls
+- Game Collection cards now preview and save custom images
+- Temperature labels now show Device Temp
+- Overlay is thinner top to bottom
+- Overlay battery line now shows percent when no estimate is available
+- Fixed overlay startup crash
+
+</details>
+
+---
+
+<details>
+<summary><strong>v0.4.1</strong></summary>
+
+### Added
+- Stable elapsed time tracking for battery tests
+- Fresh analysis timer reset when starting a new battery test
+
+### Updated
+- Fixed exact battery test duration for 5 Minutes, 10 Minutes, 1 Hour, and 2 Hours
+- Battery test progress resets to 0 immediately when a new test starts
+- Battery test runs no longer carry over an older timer job into a new test
+
+</details>
+
+---
+
+<details>
+<summary><strong>v0.4.0</strong></summary>
+
+### Added
+- Game Collection setup for proper battery test tracking
+- Average temperature tracking
+- More Game Collection sorting options
+- Game Collection settings with delete controls
+
+### Updated
+- Battery Test Setup dialog
+- Game Collection tracking and setup flow
+
+</details>
+
+</details>
+
+---
+
+<details>
+<summary><strong>v0.3</strong></summary>
 
 <details>
 <summary><strong>v0.3.2 Latest Patch</strong></summary>

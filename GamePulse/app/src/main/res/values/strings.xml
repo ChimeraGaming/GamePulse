@@ -12,8 +12,11 @@
     <string name="battery_level">Battery Level:</string>
     <string name="status">Status:</string>
     <string name="health">Health:</string>
-    <string name="temperature">Temperature:</string>
+    <string name="temperature">Device Temp:</string>
+    <string name="device_temp_cpu_avg">Device Temp (CPU AVG.):</string>
+    <string name="soc_temp">SOC Temp:</string>
     <string name="estimated_life">Estimated Life:</string>
+    <string name="thermal_sensors">Thermal Sensors:</string>
 
     <!-- RAM Monitoring -->
     <string name="ram_monitoring">RAM Monitoring</string>

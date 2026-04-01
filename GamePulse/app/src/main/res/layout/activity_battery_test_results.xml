@@ -255,6 +255,56 @@
                         android:layout_marginStart="8dp"
                         tools:text="0.15V" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.7"
+                        android:text="Avg Device Temp:"
+                        android:textColor="@color/github_dark_text"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/averageTempText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/github_dark_text"
+                        android:textSize="14sp"
+                        tools:text="35.5 C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.7"
+                        android:text="Peak Device Temp:"
+                        android:textColor="@color/github_dark_text"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/peakTempText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/github_dark_text"
+                        android:textSize="14sp"
+                        tools:text="41.2 C" />
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

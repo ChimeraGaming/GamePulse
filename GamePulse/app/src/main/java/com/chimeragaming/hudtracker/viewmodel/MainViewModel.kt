@@ -28,6 +28,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private const val MILLIS_TO_SECONDS = 1000L // Conversion factor from milliseconds to seconds
         private const val MIN_BATTERY_FOR_ANALYSIS = 10f // v0.3: Minimum battery to continue analysis
+        private const val ANALYSIS_BACKGROUND_UPDATE_INTERVAL_SECONDS = 30L
     }
 
     private val _batteryInfo = MutableStateFlow<BatteryInfo?>(null)
@@ -91,6 +92,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             viewModelScope.launch {
                 analysisService?.isRunning?.collect { running ->
                     _isAnalysisRunning.value = running
+                    val intervalSeconds = if (running) {
+                        ANALYSIS_BACKGROUND_UPDATE_INTERVAL_SECONDS
+                    } else {
+                        _updateInterval.value.toLong()
+                    }
+                    batteryMonitorService?.setUpdateInterval(intervalSeconds)
                 }
             }
 
@@ -128,6 +135,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             while (true) {
                 try {
+                    if (_isAnalysisRunning.value) {
+                        delay(ANALYSIS_BACKGROUND_UPDATE_INTERVAL_SECONDS * MILLIS_TO_SECONDS)
+                        continue
+                    }
+
                     _ramInfo.value = RAMUtils.getRAMInfo(getApplication())
                     delay(_updateInterval.value * MILLIS_TO_SECONDS)
                 } catch (e: Exception) {
@@ -143,7 +155,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         batteryMonitorService?.setUpdateInterval(seconds.toLong())
     }
 
-    fun startBatteryAnalysis(durationMinutes: Int = 60, gameName: String? = null, systemName: String? = null) {
+    fun startBatteryAnalysis(
+        durationMinutes: Int = 60,
+        gameName: String? = null,
+        systemName: String? = null,
+        packageName: String? = null
+    ) {
         // v0.3: Check battery level before starting analysis
         val currentBattery = _batteryInfo.value?.percentage ?: 100f
         if (currentBattery < 20f) {
@@ -151,11 +168,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
+        _analysisResult.value = null
+        _analysisProgress.value = 0
+        _isAnalysisRunning.value = true
+
         val intent = Intent(getApplication(), BatteryAnalysisService::class.java).apply {
             action = BatteryAnalysisService.ACTION_START_ANALYSIS
             putExtra(BatteryAnalysisService.EXTRA_DURATION_MINUTES, durationMinutes)
             putExtra(BatteryAnalysisService.EXTRA_GAME_NAME, gameName)
             putExtra(BatteryAnalysisService.EXTRA_SYSTEM_NAME, systemName)
+            putExtra(BatteryAnalysisService.EXTRA_PACKAGE_NAME, packageName)
         }
         getApplication<Application>().startForegroundService(intent)
         getApplication<Application>().bindService(intent, analysisServiceConnection, Context.BIND_AUTO_CREATE)

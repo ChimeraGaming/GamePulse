@@ -11,56 +11,80 @@ import com.chimeragaming.gamepulse.model.AppEnergyUsage
 object PerformanceUtils {
     
     // Energy estimation constants
-    private const val CPU_USAGE_PER_MINUTE = 0.5f // Estimated CPU usage percent per minute of foreground time
-    private const val CPU_USAGE_MAX = 100f // Maximum CPU usage percentage
-    private const val BATTERY_DRAIN_PER_MINUTE = 0.1f // Estimated battery drain percent per minute
-    private const val BATTERY_DRAIN_MAX = 20f // Maximum battery drain percentage cap
+    private const val CPU_USAGE_MAX = 100f
     
     /**
      * Get app usage statistics for performance analysis
      */
-    fun getAppUsageStats(context: Context, startTime: Long, endTime: Long): List<AppEnergyUsage> {
-        val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
-            ?: return emptyList()
-        
-        val usageStats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
-            startTime,
-            endTime
-        )
-        
-        val packageManager = context.packageManager
-        val appUsageList = mutableListOf<AppEnergyUsage>()
-        
-        for (stats in usageStats) {
-            if (stats.totalTimeInForeground > 0) {
-                val appName = try {
-                    val appInfo = packageManager.getApplicationInfo(stats.packageName, 0)
-                    packageManager.getApplicationLabel(appInfo).toString()
-                } catch (e: PackageManager.NameNotFoundException) {
-                    stats.packageName
-                }
-                
-                // Estimate energy usage based on foreground time
-                val foregroundMinutes = stats.totalTimeInForeground / (1000 * 60)
-                val estimatedCPU = (foregroundMinutes * CPU_USAGE_PER_MINUTE).coerceAtMost(CPU_USAGE_MAX)
-                val estimatedBatteryDrain = (foregroundMinutes * BATTERY_DRAIN_PER_MINUTE).coerceAtMost(BATTERY_DRAIN_MAX)
-                
-                appUsageList.add(
-                    AppEnergyUsage(
-                        appName = appName,
-                        packageName = stats.packageName,
-                        cpuUsagePercent = estimatedCPU,
-                        ramUsageMB = 0, // Would need additional API access
-                        networkUsageKB = 0, // Would need additional API access
-                        screenOnTimeMinutes = foregroundMinutes,
-                        batteryDrainPercent = estimatedBatteryDrain
-                    )
-                )
-            }
+    fun getAppUsageStats(
+        context: Context,
+        startTime: Long,
+        endTime: Long,
+        totalBatteryDrainPercent: Float
+    ): List<AppEnergyUsage> {
+        val usageStatsManager =
+            context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
+                ?: return emptyList()
+
+        val usageStatsMap = usageStatsManager.queryAndAggregateUsageStats(startTime, endTime)
+        val usageStats = usageStatsMap.values.filter { stats ->
+            stats.totalTimeInForeground > 0L
         }
-        
-        return appUsageList.sortedByDescending { it.getTotalEnergyScore() }
+        if (usageStats.isEmpty()) {
+            return emptyList()
+        }
+
+        val totalForegroundTimeMs = usageStats
+            .map { stats -> stats.totalTimeInForeground }
+            .sum()
+            .coerceAtLeast(1L)
+
+        val packageManager = context.packageManager
+
+        return usageStats.map { stats ->
+            val appName = try {
+                val appInfo = packageManager.getApplicationInfo(stats.packageName, 0)
+                packageManager.getApplicationLabel(appInfo).toString()
+            } catch (_: PackageManager.NameNotFoundException) {
+                stats.packageName
+            }
+
+            val foregroundTimeMs = stats.totalTimeInForeground
+            val foregroundShare = foregroundTimeMs.toFloat() / totalForegroundTimeMs.toFloat()
+            val estimatedCpu = (foregroundShare * 100f).coerceAtMost(CPU_USAGE_MAX)
+            val estimatedBatteryDrain =
+                (totalBatteryDrainPercent.coerceAtLeast(0f) * foregroundShare).coerceAtLeast(0f)
+
+            AppEnergyUsage(
+                appName = appName,
+                packageName = stats.packageName,
+                cpuUsagePercent = estimatedCpu,
+                ramUsageMB = 0L,
+                networkUsageKB = 0L,
+                screenOnTimeMinutes = foregroundTimeMs / 60000L,
+                batteryDrainPercent = estimatedBatteryDrain
+            )
+        }.sortedByDescending { usage -> usage.getTotalEnergyScore() }
+    }
+
+    fun getPackagePlaytimeMinutes(
+        context: Context,
+        packageName: String,
+        startTime: Long,
+        endTime: Long
+    ): Long {
+        val stats = getPackageUsageStats(context, packageName, startTime, endTime) ?: return 0L
+        return stats.totalTimeInForeground / (1000L * 60L)
+    }
+
+    fun getPackageLastUsedTimestamp(
+        context: Context,
+        packageName: String,
+        startTime: Long,
+        endTime: Long
+    ): Long {
+        val stats = getPackageUsageStats(context, packageName, startTime, endTime) ?: return 0L
+        return stats.lastTimeUsed
     }
     
     /**
@@ -70,5 +94,25 @@ object PerformanceUtils {
         if (totalTimeMs == 0L) return 0f
         val ratio = foregroundTimeMs.toFloat() / totalTimeMs.toFloat()
         return (ratio * 100).coerceIn(0f, 100f)
+    }
+
+    private fun getPackageUsageStats(
+        context: Context,
+        packageName: String,
+        startTime: Long,
+        endTime: Long
+    ) = try {
+        if (packageName.isBlank() || endTime <= startTime) {
+            null
+        } else {
+            val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
+            if (usageStatsManager == null) {
+                null
+            } else {
+                usageStatsManager.queryAndAggregateUsageStats(startTime, endTime)[packageName]
+            }
+        }
+    } catch (_: Exception) {
+        null
     }
 }

@@ -142,6 +142,8 @@ class BatteryTestResultsActivity : AppCompatActivity() {
             binding.startBatteryText.text = String.format("%d%%", result!!.startBatteryLevel)
             binding.endBatteryText.text = String.format("%d%%", result!!.endBatteryLevel)
             binding.voltageDropText.text = String.format("%.2fV", result!!.voltageDrop)
+            binding.averageTempText.text = result!!.getAverageTemperatureFormatted()
+            binding.peakTempText.text = result!!.getMaxTemperatureFormatted()
         } catch (e: Exception) {
             e.printStackTrace()
         }

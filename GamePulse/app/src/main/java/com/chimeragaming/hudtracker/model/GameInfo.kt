@@ -13,6 +13,8 @@ data class GameInfo(
     val packageName: String? = null,
     val batteryDrainPerHour: Float, // Percentage per hour
     val ramUsageGB: Float,
+    val averageTemperatureC: Float = 0f,
+    val lastTestDurationMinutes: Long = 0L,
     val averageSessionMinutes: Int,
     val totalPlaytimeMinutes: Long,
     val lastPlayedTimestamp: Long,
@@ -31,6 +33,29 @@ data class GameInfo(
      */
     fun getRamUsageFormatted(): String {
         return String.format("%.2f GB", ramUsageGB)
+    }
+
+    fun getAverageTemperatureFormatted(): String {
+        return if (averageTemperatureC > 0f) {
+            String.format("%.1f C", averageTemperatureC)
+        } else {
+            "N/A"
+        }
+    }
+
+    fun getLastTestDurationFormatted(): String {
+        val minutes = lastTestDurationMinutes
+        return when {
+            minutes <= 0L -> "N/A"
+            minutes < 60L -> "$minutes Minutes"
+            minutes == 60L -> "1 Hour"
+            minutes % 60L == 0L -> "${minutes / 60L} Hours"
+            else -> {
+                val hours = minutes / 60L
+                val remainingMinutes = minutes % 60L
+                "${hours}h ${remainingMinutes}m"
+            }
+        }
     }
 
     /**

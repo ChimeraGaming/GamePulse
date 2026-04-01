@@ -34,7 +34,7 @@
             android:paddingTop="8dp"
             android:paddingEnd="16dp"
             android:paddingBottom="8dp"
-            android:text="v0.3.2"
+            android:text="v0.4.2"
             android:textSize="12sp"
             android:textColor="#2196F3"
             app:strokeColor="#2196F3"
@@ -325,7 +325,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@string/temperature"
+                                android:text="@string/device_temp_cpu_avg"
                                 android:textSize="14sp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/healthLabel" />
@@ -341,6 +341,26 @@
                                 app:layout_constraintTop_toBottomOf="@id/batteryHealthText" />
 
                             <TextView
+                                android:id="@+id/socTemperatureLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/soc_temp"
+                                android:textSize="14sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/temperatureLabel" />
+
+                            <TextView
+                                android:id="@+id/socTemperatureText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/na"
+                                android:textSize="16sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/batteryTemperatureText" />
+
+                            <TextView
                                 android:id="@+id/estimatedLifeLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -348,7 +368,7 @@
                                 android:text="@string/estimated_life"
                                 android:textSize="14sp"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/temperatureLabel" />
+                                app:layout_constraintTop_toBottomOf="@id/socTemperatureLabel" />
 
                             <TextView
                                 android:id="@+id/estimatedLifeText"
@@ -360,7 +380,32 @@
                                 android:textSize="18sp"
                                 android:textStyle="bold"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/batteryTemperatureText" />
+                                app:layout_constraintTop_toBottomOf="@id/socTemperatureText" />
+
+                            <TextView
+                                android:id="@+id/thermalSensorsLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/thermal_sensors"
+                                android:textSize="14sp"
+                                android:visibility="gone"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/estimatedLifeText" />
+
+                            <TextView
+                                android:id="@+id/thermalSensorsText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:alpha="0.85"
+                                android:lineSpacingExtra="2dp"
+                                android:text="@string/na"
+                                android:textSize="12sp"
+                                android:visibility="gone"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/thermalSensorsLabel" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </LinearLayout>
@@ -643,6 +688,17 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/diagnosticFooterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:text="\@ChimeraGaming 2026"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <!-- Analysis Results Card (hidden by default) -->
             <com.google.android.material.card.MaterialCardView

@@ -15,6 +15,9 @@ data class BatteryAnalysisResult(
     val batteryDrainPercent: Float,
     val voltageDrop: Float,
     val estimatedLifeHours: Float,
+    val averageRamUsageGB: Float,
+    val averageTemperatureC: Float = 0f,
+    val maxTemperatureC: Float = 0f,
     val topApps: List<AppEnergyUsage>,
     val isComplete: Boolean = false,
     val gameName: String? = null,
@@ -36,6 +39,22 @@ data class BatteryAnalysisResult(
             minutes < 60 -> "$minutes Minutes"
             minutes == 60L -> "1 Hour"
             else -> "${minutes / 60} Hours"
+        }
+    }
+
+    fun getAverageTemperatureFormatted(): String {
+        return if (averageTemperatureC > 0f) {
+            String.format("%.1f C", averageTemperatureC)
+        } else {
+            "N/A"
+        }
+    }
+
+    fun getMaxTemperatureFormatted(): String {
+        return if (maxTemperatureC > 0f) {
+            String.format("%.1f C", maxTemperatureC)
+        } else {
+            "N/A"
         }
     }
 }

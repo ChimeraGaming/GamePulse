@@ -16,6 +16,7 @@ data class BatteryInfo(
     val level: Int,
     val scale: Int,
     val temperature: Float,
+    val socTemperature: Float = 0f,
     val status: String,
     val health: String,
     val estimatedLifeMinutes: Int = -1 // -1 = calculating, 0 = N/A (charging), >0 = actual time
