@@ -6,17 +6,18 @@
 ![Issues](https://img.shields.io/github/issues/ChimeraGaming/GamePulse)
 
 Battery and performance monitor for Android gaming.
-
-GamePulse provides clear insights into how individual games impact battery drain, RAM usage, and overall device performance. The interface is designed for simplicity, fast scanning, and consistent data tracking across gaming sessions.
+GamePulse helps track battery drain, RAM usage, temperatures, overlays, and timed battery tests so you can compare how games behave on your device.
 
 ---
 
 ## Overview
-GamePulse tracks gameplay performance in real time and organizes battery, RAM, and playtime metrics into a readable system. Sort, compare, and analyze games to understand how each title behaves on your device.
+
+GamePulse is built to make mobile and handheld gaming sessions easier to track. It focuses on fast reading, simple controls, and repeatable battery testing with a growing Game Collection system for saved results.
 
 ---
 
 ## Project Links
+
 Issues: https://github.com/ChimeraGaming/GamePulse/issues  
 Releases: https://github.com/ChimeraGaming/GamePulse/releases  
 Changelog: https://github.com/ChimeraGaming/GamePulse/blob/main/CHANGELOG.md  
@@ -27,56 +28,67 @@ License: https://github.com/ChimeraGaming/GamePulse/blob/main/LICENSE
 ## Features
 
 ### Game Collection
-Each tracked game includes:
-- Battery drain per hour
-- RAM usage
-- Total playtime
-- Platform tag (Android or emulator)
+- Tracks completed battery test results automatically
+- Stores battery drain, RAM usage, temperature, and playtime
+- Supports custom game images
+- Includes collection settings for edit and delete controls
 
 Sorting options:
-- Battery Best First
-- Battery Worst First
-- RAM Lowest First
-- RAM Highest First
+- Battery (Best First)
+- Battery (Worst First)
+- RAM (Lowest First)
+- RAM (Highest First)
+- Temperature (Lowest First)
 - Alphabetical
 
 ### Battery Monitoring
-Live battery observations with adjustable polling and update intervals.
+- Live battery percentage, voltage, health, and status
+- Device Temp (CPU AVG.) and SOC Temp
+- Adjustable update interval
 
 ### RAM Monitoring
-Real time memory usage while games are active.
+- Real-time memory usage while games are active
+- Simple readout built for quick checks during play
 
 ### Battery Test
-A controlled drain test that measures runtime performance and thermal behavior.
+- Timed tests for 5 Minutes, 10 Minutes, 1 Hour, and 2 Hours
+- Battery Test Setup with running app detection
+- Local history bubbles for emulator and game names
+- Saved results for completed tests
+
+### Overlay and HUD
+- Lightweight on-screen overlay
+- HUD mode for glanceable live stats during gameplay
 
 ### App Themes
-Theme presets that adjust the UI layout and visual style.
+- Theme presets for different visual styles
 
 ---
 
-## Installation (Development Build)
+## Installation
 
 Requirements:
 - Android Studio
 - Android device or emulator
 
 Steps:
-1. Clone the repository: git clone https://github.com/ChimeraGaming/GamePulse.git
-2. Open the folder in Android Studio
-3. Allow Gradle to sync
-4. Select a device or emulator
-5. Run the build using Android Studio
+1. Clone the repository: `git clone https://github.com/ChimeraGaming/GamePulse.git`
+2. Open the project in Android Studio.
+3. Allow Gradle to sync.
+4. Select a device or emulator.
+5. Run the app.
 
 ---
 
 ## Development Status and Roadmap
-This project is currently in beta. Upcoming improvements include:
-- Full code cleanup and structure refinements for v1.0
-- Optimized battery and RAM polling
-- Expanded game metadata collection
-- Optional overlay or HUD monitoring tools
-- Exportable performance summaries
-- Additional themes and visuals
+
+GamePulse is currently in beta and is still being refined.
+
+Current roadmap:
+- Improve battery and temperature tracking accuracy
+- Expand Game Collection history, editing, and filtering
+- Refine overlay and HUD customization
+- Continue UI polish and cleanup toward v1.0
 
 ---
 
@@ -98,11 +110,12 @@ Theme Example
 
 <img width="289" height="516" alt="Rainbow_SNES" src="https://github.com/user-attachments/assets/9b71eb5c-36d2-4aec-a5c7-e28b149106fe" />
 
-Game Collection (Coming in v.0.4)
+Game Collection
 
 <img width="359" height="800" alt="Game_Collection" src="https://github.com/user-attachments/assets/1582e926-d075-46da-9ccf-92905ebff84c" />
 
 ---
 
 ## Disclaimer
-> ⚠️ This is my first Android app, so all code sections still contain personal notes and temporary structures. These will be cleaned during the v1.0 refactor.
+
+This is my first Android app, so some parts of the project still need cleanup and refactoring as development continues toward v1.0.
