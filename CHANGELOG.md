@@ -4,7 +4,27 @@
 <summary><strong>v0.4 Latest Major</strong></summary>
 
 <details>
-<summary><strong>v0.4.1 Latest Patch</strong></summary>
+<summary><strong>v0.4.2 Latest Patch</strong></summary>
+
+### Added
+- Game Collection edit mode
+- Game image editing and save button
+- Device temperature detection from more thermal sensors
+
+### Updated
+- Game Collection settings with edit controls
+- Game Collection cards now preview and save custom images
+- Temperature labels now show Device Temp
+- Overlay is thinner top to bottom
+- Overlay battery line now shows percent when no estimate is available
+- Fixed overlay startup crash
+
+</details>
+
+---
+
+<details>
+<summary><strong>v0.4.1</strong></summary>
 
 ### Added
 - Stable elapsed time tracking for battery tests
