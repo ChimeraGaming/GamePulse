@@ -10,6 +10,7 @@
 - Game Collection edit mode
 - Game image editing and save button
 - Device temperature detection from more thermal sensors
+- Secret diagnostic setting
 
 ### Updated
 - Game Collection settings with edit controls
