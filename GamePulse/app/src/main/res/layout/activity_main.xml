@@ -236,151 +236,197 @@
                         android:paddingBottom="14dp"
                         android:visibility="gone">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/voltageLabel"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/voltage"
-                                android:textSize="14sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                android:gravity="center_vertical"
+                                android:minHeight="30dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/batteryVoltageText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/na"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                <TextView
+                                    android:id="@+id/voltageLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/voltage"
+                                    android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/levelLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/battery_level"
-                                android:textSize="14sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/voltageLabel" />
+                                <TextView
+                                    android:id="@+id/batteryVoltageText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:text="@string/na"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/batteryLevelText"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/na"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/batteryVoltageText" />
+                                android:gravity="center_vertical"
+                                android:minHeight="30dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/statusLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/status"
-                                android:textSize="14sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/levelLabel" />
+                                <TextView
+                                    android:id="@+id/levelLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/battery_level"
+                                    android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/batteryStatusText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/na"
-                                android:textSize="16sp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/batteryLevelText" />
+                                <TextView
+                                    android:id="@+id/batteryLevelText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:text="@string/na"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/healthLabel"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/health"
-                                android:textSize="14sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/statusLabel" />
+                                android:gravity="top"
+                                android:minHeight="30dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/batteryHealthText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/na"
-                                android:textSize="16sp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/batteryStatusText" />
+                                <TextView
+                                    android:id="@+id/statusLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/status"
+                                    android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/temperatureLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/device_temp_cpu_avg"
-                                android:textSize="14sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/healthLabel" />
+                                <TextView
+                                    android:id="@+id/batteryStatusText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:text="@string/na"
+                                    android:textAlignment="viewEnd"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/batteryTemperatureText"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/na"
-                                android:textSize="16sp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/batteryHealthText" />
+                                android:gravity="center_vertical"
+                                android:minHeight="30dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/socTemperatureLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/soc_temp"
-                                android:textSize="14sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/temperatureLabel" />
+                                <TextView
+                                    android:id="@+id/healthLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/health"
+                                    android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/socTemperatureText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/na"
-                                android:textSize="16sp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/batteryTemperatureText" />
+                                <TextView
+                                    android:id="@+id/batteryHealthText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:text="@string/na"
+                                    android:textAlignment="viewEnd"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/estimatedLifeLabel"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:id="@+id/batteryTemperatureRow"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/estimated_life"
-                                android:textSize="14sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/socTemperatureLabel" />
+                                android:gravity="center_vertical"
+                                android:minHeight="30dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/estimatedLifeText"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/temperatureLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/device_temp_cpu_avg"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/batteryTemperatureText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:text="@string/na"
+                                    android:textAlignment="viewEnd"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/socTemperatureRow"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/na"
-                                android:textColor="?attr/colorSecondary"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/socTemperatureText" />
+                                android:gravity="center_vertical"
+                                android:minHeight="30dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/socTemperatureLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/soc_temp"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/socTemperatureText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:text="@string/na"
+                                    android:textAlignment="viewEnd"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/estimatedLifeRow"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:minHeight="30dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/estimatedLifeLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/estimated_life"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/estimatedLifeText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:text="@string/na"
+                                    android:textAlignment="viewEnd"
+                                    android:textColor="?attr/colorSecondary"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
 
                             <TextView
                                 android:id="@+id/thermalSensorsLabel"
@@ -389,25 +435,20 @@
                                 android:layout_marginTop="12dp"
                                 android:text="@string/thermal_sensors"
                                 android:textSize="14sp"
-                                android:visibility="gone"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/estimatedLifeText" />
+                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/thermalSensorsText"
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:alpha="0.85"
                                 android:lineSpacingExtra="2dp"
                                 android:text="@string/na"
                                 android:textSize="12sp"
-                                android:visibility="gone"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/thermalSensorsLabel" />
+                                android:visibility="gone" />
 
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

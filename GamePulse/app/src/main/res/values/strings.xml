@@ -86,6 +86,7 @@
 
     <!-- Common -->
     <string name="na">N/A</string>
+    <string name="searching">Searching...</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>

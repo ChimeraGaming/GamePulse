@@ -25,12 +25,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chimeragaming.gamepulse.BuildConfig
 import com.chimeragaming.gamepulse.R
 import com.chimeragaming.gamepulse.databinding.ActivityMainBinding
+import com.chimeragaming.gamepulse.model.BatteryInfo
 import com.chimeragaming.gamepulse.service.OverlayService
 import com.chimeragaming.gamepulse.utils.BatteryUtils
 import com.chimeragaming.gamepulse.utils.ThemeManager
 import com.chimeragaming.gamepulse.viewmodel.MainViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /*
@@ -54,10 +56,15 @@ class MainActivity : AppCompatActivity() {
     private var diagnosticModeEnabled = false
     private var diagnosticTapCount = 0
     private var lastDiagnosticTapAtMs = 0L
+    private var firstBatteryInfoAtMs = 0L
+    private var latestBatteryInfo: BatteryInfo? = null
 
     companion object {
         private const val DIAGNOSTIC_TAP_TARGET = 5
         private const val DIAGNOSTIC_TAP_TIMEOUT_MS = 5000L
+        private const val OPTIONAL_SENSOR_GRACE_MS = 1500L
+        private const val ESTIMATED_LIFE_GRACE_MS = 3500L
+        private const val DIAGNOSTIC_SNACKBAR_DURATION_MS = 900
     }
 
     private val notificationPermissionLauncher = registerForActivityResult(
@@ -440,13 +447,18 @@ class MainActivity : AppCompatActivity() {
             viewModel.batteryInfo.collect { batteryInfo ->
                 batteryInfo?.let {
                     try {
+                        latestBatteryInfo = it
+
+                        if (firstBatteryInfoAtMs == 0L) {
+                            firstBatteryInfoAtMs = System.currentTimeMillis()
+                            scheduleOptionalBatteryRowRefreshes()
+                        }
+
                         binding.batteryVoltageText.text = String.format("%.2f V", it.voltage)
                         binding.batteryLevelText.text = String.format("%.1f%%", it.percentage)
                         binding.batteryStatusText.text = it.status
                         binding.batteryHealthText.text = it.health
-                        binding.batteryTemperatureText.text = formatTemperatureValue(it.temperature)
-                        binding.socTemperatureText.text = formatTemperatureValue(it.socTemperature)
-                        binding.estimatedLifeText.text = it.getEstimatedLifeFormatted()
+                        updateOptionalBatteryRows(it)
                         updateThermalSensorDisplay()
                     } catch (e: Exception) {
                         Log.e("MainActivity", "Error updating battery info", e)
@@ -533,6 +545,71 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateOptionalBatteryRows(batteryInfo: BatteryInfo) {
+        val elapsedSinceFirstReading = if (firstBatteryInfoAtMs > 0L) {
+            System.currentTimeMillis() - firstBatteryInfoAtMs
+        } else {
+            0L
+        }
+        val showSensorSearchState = elapsedSinceFirstReading < OPTIONAL_SENSOR_GRACE_MS
+        val showEstimatedLifeSearchState = elapsedSinceFirstReading < ESTIMATED_LIFE_GRACE_MS
+
+        val hasDeviceTemperature = batteryInfo.temperature > 0f
+        binding.batteryTemperatureRow.visibility = if (hasDeviceTemperature || showSensorSearchState) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        binding.batteryTemperatureText.text = when {
+            hasDeviceTemperature -> formatTemperatureValue(batteryInfo.temperature)
+            showSensorSearchState -> getString(R.string.searching)
+            else -> ""
+        }
+
+        val hasSocTemperature = batteryInfo.socTemperature > 0f
+        binding.socTemperatureRow.visibility = if (hasSocTemperature || showSensorSearchState) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        binding.socTemperatureText.text = when {
+            hasSocTemperature -> formatTemperatureValue(batteryInfo.socTemperature)
+            showSensorSearchState -> getString(R.string.searching)
+            else -> ""
+        }
+
+        val canEstimateBatteryLife = !batteryInfo.status.contains("Charging", ignoreCase = true) &&
+            !batteryInfo.status.contains("Full", ignoreCase = true)
+        val hasEstimatedLife = batteryInfo.estimatedLifeMinutes > 0
+        val isStillSearchingForEstimatedLife = canEstimateBatteryLife &&
+            batteryInfo.estimatedLifeMinutes < 0 &&
+            showEstimatedLifeSearchState
+
+        binding.estimatedLifeRow.visibility = if (hasEstimatedLife || isStillSearchingForEstimatedLife) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        binding.estimatedLifeText.text = when {
+            hasEstimatedLife -> batteryInfo.getEstimatedLifeFormatted()
+            isStillSearchingForEstimatedLife -> getString(R.string.searching)
+            else -> ""
+        }
+    }
+
+    private fun scheduleOptionalBatteryRowRefreshes() {
+        lifecycleScope.launch {
+            delay(OPTIONAL_SENSOR_GRACE_MS)
+            latestBatteryInfo?.let { updateOptionalBatteryRows(it) }
+
+            val estimatedLifeDelay = ESTIMATED_LIFE_GRACE_MS - OPTIONAL_SENSOR_GRACE_MS
+            if (estimatedLifeDelay > 0L) {
+                delay(estimatedLifeDelay)
+                latestBatteryInfo?.let { updateOptionalBatteryRows(it) }
+            }
+        }
+    }
+
     private fun formatTemperatureValue(temperatureC: Float): String {
         return if (temperatureC > 0f) {
             String.format("%.1f°C", temperatureC)
@@ -561,7 +638,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 "Diagnostic Mode disabled"
             }
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+                .setDuration(DIAGNOSTIC_SNACKBAR_DURATION_MS)
+                .show()
             return
         }
 
@@ -574,7 +653,9 @@ class MainActivity : AppCompatActivity() {
             binding.root,
             "Tap $tapsRemaining more times to $actionText",
             Snackbar.LENGTH_SHORT
-        ).show()
+        )
+            .setDuration(DIAGNOSTIC_SNACKBAR_DURATION_MS)
+            .show()
     }
 
     private fun updateDiagnosticModeUi() {
